@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Shield, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Shield, Search, ChevronLeft, ChevronRight, Clock, Video, BarChart2 } from "lucide-react";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -29,7 +30,8 @@ const Index = () => {
 
   const filteredLessons = data.lessons.filter(lesson =>
     lesson.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    lesson.description.toLowerCase().includes(searchTerm.toLowerCase())
+    lesson.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    lesson.topics.some(topic => topic.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const totalPages = Math.ceil(filteredLessons.length / ITEMS_PER_PAGE);
@@ -38,7 +40,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold mb-8 text-center text-blue-600">
           <Shield className="inline-block mr-2 h-10 w-10" />
           Cyber and Data Security Awareness
@@ -55,15 +57,37 @@ const Index = () => {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 mb-6">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
           {paginatedLessons.map(lesson => (
-            <Card key={lesson.id}>
+            <Card key={lesson.id} className="flex flex-col">
               <CardHeader>
                 <CardTitle>{lesson.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
                 <CardDescription>{lesson.description}</CardDescription>
+              </CardHeader>
+              <CardContent className="flex-grow">
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {lesson.topics.map((topic, index) => (
+                    <Badge key={index} variant="secondary">{topic}</Badge>
+                  ))}
+                </div>
+                <div className="text-sm text-gray-600 mb-2">
+                  <Clock className="inline-block mr-1 h-4 w-4" />
+                  Time: {lesson.timeConsumption}
+                </div>
+                <div className="text-sm text-gray-600 mb-2">
+                  <Video className="inline-block mr-1 h-4 w-4" />
+                  Video: {lesson.videoLength}
+                </div>
+                <div className="text-sm text-gray-600">
+                  <BarChart2 className="inline-block mr-1 h-4 w-4" />
+                  Difficulty: {lesson.difficultyLevel}
+                </div>
               </CardContent>
+              <CardFooter>
+                <div className="text-sm text-gray-600">
+                  Available in: {lesson.availableLanguages.join(", ")}
+                </div>
+              </CardFooter>
             </Card>
           ))}
         </div>

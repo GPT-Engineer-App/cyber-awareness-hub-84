@@ -1,14 +1,104 @@
 {
   "lessons": [
-    { "id": 1, "title": "Password Security", "description": "Learn how to create and manage strong passwords." },
-    { "id": 2, "title": "Phishing Awareness", "description": "Identify and avoid phishing attempts in emails and websites." },
-    { "id": 3, "title": "Data Privacy", "description": "Understand the importance of protecting personal and company data." },
-    { "id": 4, "title": "Social Engineering", "description": "Recognize and prevent social engineering attacks." },
-    { "id": 5, "title": "Mobile Device Security", "description": "Secure your smartphones and tablets from cyber threats." },
-    { "id": 6, "title": "Network Security Basics", "description": "Learn the fundamentals of securing computer networks." },
-    { "id": 7, "title": "Malware Protection", "description": "Understand different types of malware and how to protect against them." },
-    { "id": 8, "title": "Cloud Security", "description": "Explore security considerations for cloud computing environments." },
-    { "id": 9, "title": "Encryption Fundamentals", "description": "Learn the basics of data encryption and its importance." },
-    { "id": 10, "title": "Secure Web Browsing", "description": "Best practices for safe internet browsing and online transactions." }
+    {
+      "id": 1,
+      "title": "Password Security",
+      "description": "Learn how to create and manage strong passwords.",
+      "availableLanguages": ["English", "Danish", "Norwegian"],
+      "topics": ["Passwords", "Authentication", "Security Best Practices"],
+      "videoLength": "15:30",
+      "timeConsumption": "30 minutes",
+      "difficultyLevel": "Beginner"
+    },
+    {
+      "id": 2,
+      "title": "Phishing Awareness",
+      "description": "Identify and avoid phishing attempts in emails and websites.",
+      "availableLanguages": ["English", "Danish", "Swedish"],
+      "topics": ["Phishing", "Email Security", "Social Engineering"],
+      "videoLength": "20:45",
+      "timeConsumption": "45 minutes",
+      "difficultyLevel": "Intermediate"
+    },
+    {
+      "id": 3,
+      "title": "Data Privacy",
+      "description": "Understand the importance of protecting personal and company data.",
+      "availableLanguages": ["English", "Norwegian", "Finnish"],
+      "topics": ["Privacy", "Data Protection", "GDPR"],
+      "videoLength": "18:20",
+      "timeConsumption": "40 minutes",
+      "difficultyLevel": "Intermediate"
+    },
+    {
+      "id": 4,
+      "title": "Social Engineering",
+      "description": "Recognize and prevent social engineering attacks.",
+      "availableLanguages": ["English", "Danish", "Swedish"],
+      "topics": ["Social Engineering", "Security Awareness", "Human Factor"],
+      "videoLength": "22:10",
+      "timeConsumption": "50 minutes",
+      "difficultyLevel": "Advanced"
+    },
+    {
+      "id": 5,
+      "title": "Mobile Device Security",
+      "description": "Secure your smartphones and tablets from cyber threats.",
+      "availableLanguages": ["English", "Norwegian", "Finnish"],
+      "topics": ["Mobile Security", "BYOD", "App Safety"],
+      "videoLength": "17:55",
+      "timeConsumption": "35 minutes",
+      "difficultyLevel": "Beginner"
+    },
+    {
+      "id": 6,
+      "title": "Network Security Basics",
+      "description": "Learn the fundamentals of securing computer networks.",
+      "availableLanguages": ["English", "Danish", "Swedish"],
+      "topics": ["Network Security", "Firewalls", "VPNs"],
+      "videoLength": "25:30",
+      "timeConsumption": "60 minutes",
+      "difficultyLevel": "Intermediate"
+    },
+    {
+      "id": 7,
+      "title": "Malware Protection",
+      "description": "Understand different types of malware and how to protect against them.",
+      "availableLanguages": ["English", "Norwegian", "Finnish"],
+      "topics": ["Malware", "Antivirus", "Cybersecurity"],
+      "videoLength": "21:15",
+      "timeConsumption": "45 minutes",
+      "difficultyLevel": "Intermediate"
+    },
+    {
+      "id": 8,
+      "title": "Cloud Security",
+      "description": "Explore security considerations for cloud computing environments.",
+      "availableLanguages": ["English", "Danish", "Swedish"],
+      "topics": ["Cloud Computing", "Data Storage", "Remote Access"],
+      "videoLength": "23:40",
+      "timeConsumption": "55 minutes",
+      "difficultyLevel": "Advanced"
+    },
+    {
+      "id": 9,
+      "title": "Encryption Fundamentals",
+      "description": "Learn the basics of data encryption and its importance.",
+      "availableLanguages": ["English", "Norwegian", "Finnish"],
+      "topics": ["Encryption", "Data Protection", "Cryptography"],
+      "videoLength": "19:50",
+      "timeConsumption": "40 minutes",
+      "difficultyLevel": "Intermediate"
+    },
+    {
+      "id": 10,
+      "title": "Secure Web Browsing",
+      "description": "Best practices for safe internet browsing and online transactions.",
+      "availableLanguages": ["English", "Danish", "Swedish"],
+      "topics": ["Web Security", "HTTPS", "Online Safety"],
+      "videoLength": "16:25",
+      "timeConsumption": "35 minutes",
+      "difficultyLevel": "Beginner"
+    }
   ]
 }
