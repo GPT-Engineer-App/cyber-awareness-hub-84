@@ -1,23 +1,40 @@
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Shield, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Shield, Search, ChevronLeft, ChevronRight } from "lucide-react";
 
-const lessons = [
-  { id: 1, title: "Password Security", description: "Learn how to create and manage strong passwords." },
-  { id: 2, title: "Phishing Awareness", description: "Identify and avoid phishing attempts in emails and websites." },
-  { id: 3, title: "Data Privacy", description: "Understand the importance of protecting personal and company data." },
-  { id: 4, title: "Social Engineering", description: "Recognize and prevent social engineering attacks." },
-  { id: 5, title: "Mobile Device Security", description: "Secure your smartphones and tablets from cyber threats." },
-];
+const ITEMS_PER_PAGE = 6;
+
+const fetchLessons = async () => {
+  const response = await fetch('/lessons.json');
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return response.json();
+};
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const filteredLessons = lessons.filter(lesson =>
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['lessons'],
+    queryFn: fetchLessons,
+  });
+
+  if (isLoading) return <div className="text-center mt-8">Loading...</div>;
+  if (error) return <div className="text-center mt-8 text-red-500">Error: {error.message}</div>;
+
+  const filteredLessons = data.lessons.filter(lesson =>
     lesson.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     lesson.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const totalPages = Math.ceil(filteredLessons.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedLessons = filteredLessons.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -38,8 +55,8 @@ const Index = () => {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          {filteredLessons.map(lesson => (
+        <div className="grid gap-6 md:grid-cols-2 mb-6">
+          {paginatedLessons.map(lesson => (
             <Card key={lesson.id}>
               <CardHeader>
                 <CardTitle>{lesson.title}</CardTitle>
@@ -49,6 +66,22 @@ const Index = () => {
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        <div className="flex justify-between items-center">
+          <Button
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            <ChevronLeft className="mr-2 h-4 w-4" /> Previous
+          </Button>
+          <span>Page {currentPage} of {totalPages}</span>
+          <Button
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+          >
+            Next <ChevronRight className="ml-2 h-4 w-4" />
+          </Button>
         </div>
       </div>
     </div>

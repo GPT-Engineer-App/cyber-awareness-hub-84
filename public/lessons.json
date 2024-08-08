@@ -1,0 +1,14 @@
+{
+  "lessons": [
+    { "id": 1, "title": "Password Security", "description": "Learn how to create and manage strong passwords." },
+    { "id": 2, "title": "Phishing Awareness", "description": "Identify and avoid phishing attempts in emails and websites." },
+    { "id": 3, "title": "Data Privacy", "description": "Understand the importance of protecting personal and company data." },
+    { "id": 4, "title": "Social Engineering", "description": "Recognize and prevent social engineering attacks." },
+    { "id": 5, "title": "Mobile Device Security", "description": "Secure your smartphones and tablets from cyber threats." },
+    { "id": 6, "title": "Network Security Basics", "description": "Learn the fundamentals of securing computer networks." },
+    { "id": 7, "title": "Malware Protection", "description": "Understand different types of malware and how to protect against them." },
+    { "id": 8, "title": "Cloud Security", "description": "Explore security considerations for cloud computing environments." },
+    { "id": 9, "title": "Encryption Fundamentals", "description": "Learn the basics of data encryption and its importance." },
+    { "id": 10, "title": "Secure Web Browsing", "description": "Best practices for safe internet browsing and online transactions." }
+  ]
+}
