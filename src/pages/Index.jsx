@@ -84,7 +84,7 @@ const Index = () => {
                 </div>
                 <div className="text-sm text-gray-600">
                   <HelpCircle className="inline-block mr-1 h-4 w-4" />
-                  Quiz: {lesson.quizQuestions} questions
+                  Number of quiz questions: {lesson.quizQuestions}
                 </div>
               </CardContent>
               <CardFooter>
