@@ -9,11 +9,18 @@ import { Shield, Search, ChevronLeft, ChevronRight, Clock, Video, BarChart2, Hel
 const ITEMS_PER_PAGE = 6;
 
 const fetchLessons = async () => {
-  const response = await fetch('/lessons.json');
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
+  const storedLessons = localStorage.getItem("lessons");
+  if (storedLessons) {
+    return { lessons: JSON.parse(storedLessons) };
+  } else {
+    const response = await fetch('/lessons.json');
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    localStorage.setItem("lessons", JSON.stringify(data.lessons));
+    return data;
   }
-  return response.json();
 };
 
 const Index = () => {
