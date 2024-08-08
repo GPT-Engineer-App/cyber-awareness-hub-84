@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Shield, Search, ChevronLeft, ChevronRight, Clock, Video, BarChart2 } from "lucide-react";
+import { Shield, Search, ChevronLeft, ChevronRight, Clock, Video, BarChart2, HelpCircle } from "lucide-react";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -78,9 +78,13 @@ const Index = () => {
                   <Video className="inline-block mr-1 h-4 w-4" />
                   Video: {lesson.videoLength}
                 </div>
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-gray-600 mb-2">
                   <BarChart2 className="inline-block mr-1 h-4 w-4" />
                   Difficulty: {lesson.difficultyLevel}
+                </div>
+                <div className="text-sm text-gray-600">
+                  <HelpCircle className="inline-block mr-1 h-4 w-4" />
+                  Quiz: {lesson.quizQuestions} questions
                 </div>
               </CardContent>
               <CardFooter>
