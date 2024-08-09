@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Shield, Search, ChevronLeft, ChevronRight, Clock, Video, BarChart2, HelpCircle } from "lucide-react";
 
 const ITEMS_PER_PAGE = 6;
@@ -19,6 +20,8 @@ const fetchLessons = async () => {
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortTopic, setSortTopic] = useState('');
+  const [sortLanguage, setSortLanguage] = useState('');
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['lessons'],
@@ -28,15 +31,27 @@ const Index = () => {
   if (isLoading) return <div className="text-center mt-8">Loading...</div>;
   if (error) return <div className="text-center mt-8 text-red-500">Error: {error.message}</div>;
 
-  const filteredLessons = data.lessons.filter(lesson =>
-    lesson.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    lesson.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    data.topics.some((topic, index) => lesson.topics.includes(index) && topic.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  const filteredAndSortedLessons = useMemo(() => {
+    let result = data.lessons.filter(lesson =>
+      lesson.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lesson.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      data.topics.some((topic, index) => lesson.topics.includes(index) && topic.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
 
-  const totalPages = Math.ceil(filteredLessons.length / ITEMS_PER_PAGE);
+    if (sortTopic) {
+      result = result.filter(lesson => lesson.topics.includes(parseInt(sortTopic)));
+    }
+
+    if (sortLanguage) {
+      result = result.filter(lesson => lesson.availableLanguages.includes(parseInt(sortLanguage)));
+    }
+
+    return result;
+  }, [data, searchTerm, sortTopic, sortLanguage]);
+
+  const totalPages = Math.ceil(filteredAndSortedLessons.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const paginatedLessons = filteredLessons.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const paginatedLessons = filteredAndSortedLessons.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -46,15 +61,39 @@ const Index = () => {
           Cyber and Data Security Awareness
         </h1>
         
-        <div className="mb-6 relative">
-          <Input
-            type="text"
-            placeholder="Search lessons..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+        <div className="mb-6 flex space-x-4">
+          <div className="relative flex-grow">
+            <Input
+              type="text"
+              placeholder="Search lessons..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          </div>
+          <Select value={sortTopic} onValueChange={setSortTopic}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Sort by Topic" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">All Topics</SelectItem>
+              {data.topics.map((topic, index) => (
+                <SelectItem key={index} value={index.toString()}>{topic}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={sortLanguage} onValueChange={setSortLanguage}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Sort by Language" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">All Languages</SelectItem>
+              {data.languages.map((language, index) => (
+                <SelectItem key={index} value={index.toString()}>{language}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
