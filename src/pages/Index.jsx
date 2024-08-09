@@ -77,7 +77,6 @@ const Index = () => {
   const t = translations[language];
 
   const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
   const [sortTopic, setSortTopic] = useState('');
   const [sortLanguage, setSortLanguage] = useState('');
   const [showCourseCreator, setShowCourseCreator] = useState(false);
@@ -134,10 +133,6 @@ const Index = () => {
 
     return result;
   }, [data, searchTerm, sortTopic, sortLanguage]);
-
-  const totalPages = Math.ceil((filteredAndSortedLessons?.length || 0) / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const paginatedLessons = filteredAndSortedLessons.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   if (isLoading) return <div className="text-center mt-8">{t.loading}</div>;
   if (error) return <div className="text-center mt-8 text-red-500">{t.error} {error.message}</div>;
@@ -209,7 +204,7 @@ const Index = () => {
         )}
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
-          {paginatedLessons.map(lesson => (
+          {filteredAndSortedLessons.map(lesson => (
             <Card 
               key={lesson.lessonId} 
               className="relative flex flex-col transition-all duration-200 hover:bg-gray-50 border border-transparent"
@@ -260,22 +255,6 @@ const Index = () => {
               </CardFooter>
             </Card>
           ))}
-        </div>
-
-        <div className="flex justify-between items-center">
-          <Button
-            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-          >
-            <ChevronLeft className="mr-2 h-4 w-4" /> {t.previous}
-          </Button>
-          <span>{t.page} {currentPage} {t.of} {totalPages}</span>
-          <Button
-            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-          >
-            {t.next} <ChevronRight className="ml-2 h-4 w-4" />
-          </Button>
         </div>
       </div>
     </div>
