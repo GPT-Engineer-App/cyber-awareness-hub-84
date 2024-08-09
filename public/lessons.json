@@ -43,7 +43,7 @@
       "description": "Learn how to create and manage strong passwords.",
       "availableLanguages": [0, 1, 2],
       "topics": [0, 1, 2],
-      "thumbImage": "https://example.com/images/password-security-thumb.jpg",
+      "videoUrl": "987172529",
       "videoLength": "15:30",
       "timeConsumption": "30 minutes",
       "difficultyLevel": "Beginner",
@@ -55,6 +55,7 @@
       "description": "Identify and avoid phishing attempts in emails and websites.",
       "availableLanguages": ["English", "Danish", "Swedish"],
       "topics": ["Phishing", "Email Security", "Social Engineering"],
+      "videoUrl": "987172530",
       "videoLength": "20:45",
       "timeConsumption": "45 minutes",
       "difficultyLevel": "Intermediate"
@@ -65,6 +66,7 @@
       "description": "Understand the importance of protecting personal and company data.",
       "availableLanguages": ["English", "Norwegian", "Finnish"],
       "topics": ["Privacy", "Data Protection", "GDPR"],
+      "videoUrl": "987172531",
       "videoLength": "18:20",
       "timeConsumption": "40 minutes",
       "difficultyLevel": "Intermediate"
@@ -75,6 +77,7 @@
       "description": "Recognize and prevent social engineering attacks.",
       "availableLanguages": ["English", "Danish", "Swedish"],
       "topics": ["Social Engineering", "Security Awareness", "Human Factor"],
+      "videoUrl": "987172532",
       "videoLength": "22:10",
       "timeConsumption": "50 minutes",
       "difficultyLevel": "Advanced"
@@ -85,6 +88,7 @@
       "description": "Secure your smartphones and tablets from cyber threats.",
       "availableLanguages": ["English", "Norwegian", "Finnish"],
       "topics": ["Mobile Security", "BYOD", "App Safety"],
+      "videoUrl": "987172533",
       "videoLength": "17:55",
       "timeConsumption": "35 minutes",
       "difficultyLevel": "Beginner"
@@ -95,6 +99,7 @@
       "description": "Learn the fundamentals of securing computer networks.",
       "availableLanguages": ["English", "Danish", "Swedish"],
       "topics": ["Network Security", "Firewalls", "VPNs"],
+      "videoUrl": "987172534",
       "videoLength": "25:30",
       "timeConsumption": "60 minutes",
       "difficultyLevel": "Intermediate"
@@ -105,6 +110,7 @@
       "description": "Understand different types of malware and how to protect against them.",
       "availableLanguages": ["English", "Norwegian", "Finnish"],
       "topics": ["Malware", "Antivirus", "Cybersecurity"],
+      "videoUrl": "987172535",
       "videoLength": "21:15",
       "timeConsumption": "45 minutes",
       "difficultyLevel": "Intermediate"
@@ -115,6 +121,7 @@
       "description": "Explore security considerations for cloud computing environments.",
       "availableLanguages": ["English", "Danish", "Swedish"],
       "topics": ["Cloud Computing", "Data Storage", "Remote Access"],
+      "videoUrl": "987172536",
       "videoLength": "23:40",
       "timeConsumption": "55 minutes",
       "difficultyLevel": "Advanced"
@@ -125,6 +132,7 @@
       "description": "Learn the basics of data encryption and its importance.",
       "availableLanguages": ["English", "Norwegian", "Finnish"],
       "topics": ["Encryption", "Data Protection", "Cryptography"],
+      "videoUrl": "987172537",
       "videoLength": "19:50",
       "timeConsumption": "40 minutes",
       "difficultyLevel": "Intermediate"
@@ -135,6 +143,7 @@
       "description": "Best practices for safe internet browsing and online transactions.",
       "availableLanguages": ["English", "Danish", "Swedish"],
       "topics": ["Web Security", "HTTPS", "Online Safety"],
+      "videoUrl": "987172538",
       "videoLength": "16:25",
       "timeConsumption": "35 minutes",
       "difficultyLevel": "Beginner"
