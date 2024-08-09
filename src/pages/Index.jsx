@@ -103,7 +103,7 @@ const Index = () => {
           </Select>
         </div>
 
-        {showCourseCreator && <CourseCreator lessons={data.lessons} topics={data.topics} />}
+        {showCourseCreator && data && <CourseCreator lessons={data.lessons} topics={data.topics} />}
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
           {paginatedLessons.map(lesson => (

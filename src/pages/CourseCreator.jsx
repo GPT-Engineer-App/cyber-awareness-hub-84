@@ -13,7 +13,7 @@ const CourseCreator = ({ lessons, topics }) => {
     e.preventDefault();
     const keywords = prompt.toLowerCase().split(' ');
     const filteredLessons = lessons.filter(lesson => {
-      const lessonTopics = lesson.topics.map(topicIndex => topics[topicIndex].toLowerCase());
+      const lessonTopics = lesson.topics.map(topicIndex => topics && topics[topicIndex] ? topics[topicIndex].toLowerCase() : '');
       return keywords.some(keyword => 
         lesson.title.toLowerCase().includes(keyword) ||
         lesson.description.toLowerCase().includes(keyword) ||
