@@ -26,7 +26,7 @@ const Index = () => {
   const [sortTopic, setSortTopic] = useState('');
   const [sortLanguage, setSortLanguage] = useState('');
   const [showCourseCreator, setShowCourseCreator] = useState(false);
-  const [selectedLessons, setSelectedLessons] = useState([]);
+  const [selectedLessons, setSelectedLessons] = useState({});
   const [showSummary, setShowSummary] = useState(false);
 
   const { data, isLoading, error } = useQuery({
@@ -115,15 +115,12 @@ const Index = () => {
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">{lesson.title}</CardTitle>
                 <Checkbox
-                  checked={selectedLessons.some(l => l.lessonId === lesson.lessonId)}
+                  checked={selectedLessons[lesson.lessonId] || false}
                   onCheckedChange={(checked) => {
-                    setSelectedLessons(prev => {
-                      if (checked) {
-                        return [...prev, lesson];
-                      } else {
-                        return prev.filter(l => l.lessonId !== lesson.lessonId);
-                      }
-                    });
+                    setSelectedLessons(prev => ({
+                      ...prev,
+                      [lesson.lessonId]: checked
+                    }));
                   }}
                 />
               </CardHeader>
@@ -181,7 +178,7 @@ const Index = () => {
           <DialogTrigger asChild>
             <Button 
               className="mt-4"
-              disabled={selectedLessons.length === 0}
+              disabled={Object.values(selectedLessons).filter(Boolean).length === 0}
               onClick={() => setShowSummary(true)}
             >
               View Selected Lessons Summary
@@ -193,14 +190,23 @@ const Index = () => {
             </DialogHeader>
             <div className="mt-4">
               <h3 className="text-lg font-semibold mb-2">
-                Total Time: {selectedLessons.reduce((total, lesson) => total + parseInt(lesson.timeConsumption), 0)} minutes
+                Total Time: {Object.entries(selectedLessons)
+                  .filter(([_, isSelected]) => isSelected)
+                  .reduce((total, [lessonId, _]) => {
+                    const lesson = data.lessons.find(l => l.lessonId === lessonId);
+                    return total + parseInt(lesson.timeConsumption);
+                  }, 0)} minutes
               </h3>
               <p className="mb-4">
-                You have selected {selectedLessons.length} lesson{selectedLessons.length !== 1 ? 's' : ''}. 
+                You have selected {Object.values(selectedLessons).filter(Boolean).length} lesson{Object.values(selectedLessons).filter(Boolean).length !== 1 ? 's' : ''}. 
                 Here's a summary of your selection:
               </p>
               <ul className="list-disc pl-5 space-y-2">
-                {selectedLessons.map(lesson => (
+                {Object.entries(selectedLessons)
+                  .filter(([_, isSelected]) => isSelected)
+                  .map(([lessonId, _]) => {
+                    const lesson = data.lessons.find(l => l.lessonId === lessonId);
+                    return (
                   <li key={lesson.lessonId}>
                     <strong>{lesson.title}</strong>
                     <ul className="list-none pl-5 space-y-1">
@@ -210,7 +216,8 @@ const Index = () => {
                       <li>Topics: {lesson.topics.map(topicIndex => data.topics[topicIndex]).join(', ')}</li>
                     </ul>
                   </li>
-                ))}
+                    );
+                  })}
               </ul>
             </div>
           </DialogContent>
