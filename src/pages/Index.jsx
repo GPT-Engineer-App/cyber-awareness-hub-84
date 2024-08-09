@@ -5,8 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Shield, Search, ChevronLeft, ChevronRight, Clock, Video, BarChart2, HelpCircle } from "lucide-react";
+import { Shield, Search, ChevronLeft, ChevronRight, Clock, Video, BarChart2, HelpCircle, Plus } from "lucide-react";
 import CourseCreator from './CourseCreator';
+import CourseBuilder from './CourseBuilder';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -24,11 +25,24 @@ const Index = () => {
   const [sortTopic, setSortTopic] = useState('');
   const [sortLanguage, setSortLanguage] = useState('');
   const [showCourseCreator, setShowCourseCreator] = useState(false);
+  const [showCourseBuilder, setShowCourseBuilder] = useState(false);
+  const [selectedLessons, setSelectedLessons] = useState([]);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['lessons'],
     queryFn: fetchLessons,
   });
+
+  const handleLessonSelect = (lesson) => {
+    setSelectedLessons((prev) => {
+      const isAlreadySelected = prev.some((l) => l.lessonId === lesson.lessonId);
+      if (isAlreadySelected) {
+        return prev.filter((l) => l.lessonId !== lesson.lessonId);
+      } else {
+        return [...prev, lesson];
+      }
+    });
+  };
 
   const filteredAndSortedLessons = useMemo(() => {
     if (!data) return [];
@@ -69,6 +83,9 @@ const Index = () => {
           <Button onClick={() => setShowCourseCreator(!showCourseCreator)}>
             {showCourseCreator ? 'Hide Course Creator' : 'Create Custom Course'}
           </Button>
+          <Button onClick={() => setShowCourseBuilder(!showCourseBuilder)}>
+            {showCourseBuilder ? 'Hide Course Builder' : 'Build Course'}
+          </Button>
           <div className="relative flex-grow">
             <Input
               type="text"
@@ -104,12 +121,22 @@ const Index = () => {
         </div>
 
         {showCourseCreator && data && <CourseCreator lessons={data.lessons} topics={data.topics} />}
+        {showCourseBuilder && <CourseBuilder selectedLessons={selectedLessons} />}
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
           {paginatedLessons.map(lesson => (
             <Card key={lesson.lessonId} className="flex flex-col">
               <CardHeader>
-                <CardTitle>{lesson.title}</CardTitle>
+                <CardTitle className="flex justify-between items-center">
+                  <span>{lesson.title}</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleLessonSelect(lesson)}
+                  >
+                    <Plus className={`h-4 w-4 ${selectedLessons.some(l => l.lessonId === lesson.lessonId) ? 'text-green-500' : ''}`} />
+                  </Button>
+                </CardTitle>
                 <CardDescription>{lesson.description}</CardDescription>
               </CardHeader>
               <CardContent className="flex-grow">
