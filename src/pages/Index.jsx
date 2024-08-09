@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -62,17 +62,11 @@ const translations = {
 };
 
 const fetchLessons = async () => {
-  const storedLessons = localStorage.getItem('lessons');
-  if (storedLessons) {
-    return { lessons: JSON.parse(storedLessons) };
-  }
   const response = await fetch('/lessons.json');
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
-  const data = await response.json();
-  localStorage.setItem('lessons', JSON.stringify(data.lessons));
-  return data;
+  return response.json();
 };
 
 const Index = () => {

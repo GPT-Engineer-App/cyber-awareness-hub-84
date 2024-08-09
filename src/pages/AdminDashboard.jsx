@@ -2,34 +2,51 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import LessonForm from "./LessonForm";
 
+// Simulated API functions
+const fetchLessonsData = async () => {
+  const response = await fetch('/lessons.json');
+  if (!response.ok) {
+    throw new Error('Failed to fetch lessons data');
+  }
+  return response.json();
+};
+
+const updateLessonsData = async (newLessons) => {
+  // In a real backend, this would update the lessons.json file
+  // For now, we'll just simulate a delay and return the data
+  await new Promise(resolve => setTimeout(resolve, 500));
+  return newLessons;
+};
+
 const AdminDashboard = () => {
-  const [lessons, setLessons] = useState([]);
-  const [topics, setTopics] = useState([]);
-  const [languages, setLanguages] = useState([]);
   const [editingLesson, setEditingLesson] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const storedLessons = localStorage.getItem('lessons');
-      if (storedLessons) {
-        setLessons(JSON.parse(storedLessons));
-      } else {
-        const response = await fetch('/lessons.json');
-        const data = await response.json();
-        setLessons(data.lessons);
-        localStorage.setItem('lessons', JSON.stringify(data.lessons));
-      }
-      const response = await fetch('/lessons.json');
-      const data = await response.json();
-      setTopics(data.topics);
-      setLanguages(data.languages);
-    };
-    fetchData();
-  }, []);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['lessonsData'],
+    queryFn: fetchLessonsData,
+  });
+
+  const mutation = useMutation({
+    mutationFn: updateLessonsData,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['lessonsData'], data);
+      toast.success("Lessons updated successfully");
+    },
+    onError: (error) => {
+      toast.error(`Error updating lessons: ${error.message}`);
+    },
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  const { lessons, topics, languages } = data;
 
   const handleSubmit = (lesson) => {
     let updatedLessons;
@@ -37,14 +54,11 @@ const AdminDashboard = () => {
       updatedLessons = lessons.map((l) =>
         l.lessonId === lesson.lessonId ? lesson : l
       );
-      toast.success("Lektion opdateret");
     } else {
       const newLessonId = `SEC${String(lessons.length + 1).padStart(3, '0')}`;
       updatedLessons = [...lessons, { ...lesson, lessonId: newLessonId }];
-      toast.success("Lektion tilføjet");
     }
-    setLessons(updatedLessons);
-    localStorage.setItem('lessons', JSON.stringify(updatedLessons));
+    mutation.mutate({ ...data, lessons: updatedLessons });
     setIsDialogOpen(false);
     setEditingLesson(null);
   };
@@ -56,9 +70,7 @@ const AdminDashboard = () => {
 
   const handleDelete = (lessonId) => {
     const updatedLessons = lessons.filter((lesson) => lesson.lessonId !== lessonId);
-    setLessons(updatedLessons);
-    localStorage.setItem('lessons', JSON.stringify(updatedLessons));
-    toast.success("Lektion slettet");
+    mutation.mutate({ ...data, lessons: updatedLessons });
   };
 
   return (
