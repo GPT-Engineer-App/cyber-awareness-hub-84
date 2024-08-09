@@ -188,7 +188,6 @@ const Index = () => {
             </Card>
           ))}
         </div>
-      </div>
 
       <div className="flex justify-between items-center">
           <Button
