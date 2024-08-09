@@ -34,6 +34,12 @@ const Index = () => {
     queryFn: fetchLessons,
   });
 
+  const handleLessonSelection = (lessonId) => {
+    setSelectedLessons(prev => ({
+      [lessonId]: !prev[lessonId]
+    }));
+  };
+
   const filteredAndSortedLessons = useMemo(() => {
     if (!data) return [];
     
@@ -116,12 +122,7 @@ const Index = () => {
                 <CardTitle className="text-sm font-medium">{lesson.title}</CardTitle>
                 <Checkbox
                   checked={selectedLessons[lesson.lessonId] || false}
-                  onCheckedChange={(checked) => {
-                    setSelectedLessons(prev => ({
-                      ...prev,
-                      [lesson.lessonId]: checked
-                    }));
-                  }}
+                  onCheckedChange={() => handleLessonSelection(lesson.lessonId)}
                 />
               </CardHeader>
               <CardContent className="flex-grow">
