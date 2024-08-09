@@ -2,35 +2,86 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 
 const AdminDashboard = () => {
   const [lessons, setLessons] = useState([]);
+  const [topics, setTopics] = useState([]);
+  const [languages, setLanguages] = useState([]);
   const [editingLesson, setEditingLesson] = useState(null);
   const [newLesson, setNewLesson] = useState({
+    lessonId: "",
     title: "",
     description: "",
-    topics: "",
+    topics: [],
     videoLength: "",
     timeConsumption: "",
     difficultyLevel: "",
     quizQuestions: "",
-    availableLanguages: "",
+    availableLanguages: [],
+    thumbImage: "",
   });
 
   useEffect(() => {
-    const storedLessons = localStorage.getItem("lessons");
-    if (storedLessons) {
-      setLessons(JSON.parse(storedLessons));
-    }
+    const fetchData = async () => {
+      const response = await fetch('/lessons.json');
+      const data = await response.json();
+      setLessons(data.lessons);
+      setTopics(data.topics);
+      setLanguages(data.languages);
+    };
+    fetchData();
   }, []);
 
-  const handleInputChange = (e, isEditing = false) => {
-    const { name, value } = e.target;
+  const handleInputChange = (name, value, isEditing = false) => {
     if (isEditing) {
       setEditingLesson((prev) => ({ ...prev, [name]: value }));
     } else {
       setNewLesson((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleTopicChange = (topicIndex, isChecked, isEditing = false) => {
+    const updateTopics = (prev) => {
+      const newTopics = [...prev.topics];
+      if (isChecked) {
+        newTopics.push(topicIndex);
+      } else {
+        const index = newTopics.indexOf(topicIndex);
+        if (index > -1) {
+          newTopics.splice(index, 1);
+        }
+      }
+      return { ...prev, topics: newTopics };
+    };
+
+    if (isEditing) {
+      setEditingLesson(updateTopics);
+    } else {
+      setNewLesson(updateTopics);
+    }
+  };
+
+  const handleLanguageChange = (langIndex, isChecked, isEditing = false) => {
+    const updateLanguages = (prev) => {
+      const newLanguages = [...prev.availableLanguages];
+      if (isChecked) {
+        newLanguages.push(langIndex);
+      } else {
+        const index = newLanguages.indexOf(langIndex);
+        if (index > -1) {
+          newLanguages.splice(index, 1);
+        }
+      }
+      return { ...prev, availableLanguages: newLanguages };
+    };
+
+    if (isEditing) {
+      setEditingLesson(updateLanguages);
+    } else {
+      setNewLesson(updateLanguages);
     }
   };
 
@@ -39,29 +90,23 @@ const AdminDashboard = () => {
     let updatedLessons;
     if (editingLesson) {
       updatedLessons = lessons.map((lesson) =>
-        lesson.id === editingLesson.id ? { ...editingLesson, topics: editingLesson.topics.split(",").map((topic) => topic.trim()), availableLanguages: editingLesson.availableLanguages.split(",").map((lang) => lang.trim()) } : lesson
+        lesson.lessonId === editingLesson.lessonId ? editingLesson : lesson
       );
       setEditingLesson(null);
       toast.success("Lesson updated successfully");
     } else {
-      updatedLessons = [
-        ...lessons,
-        {
-          ...newLesson,
-          id: Date.now(),
-          topics: newLesson.topics.split(",").map((topic) => topic.trim()),
-          availableLanguages: newLesson.availableLanguages.split(",").map((lang) => lang.trim()),
-        },
-      ];
+      updatedLessons = [...lessons, newLesson];
       setNewLesson({
+        lessonId: "",
         title: "",
         description: "",
-        topics: "",
+        topics: [],
         videoLength: "",
         timeConsumption: "",
         difficultyLevel: "",
         quizQuestions: "",
-        availableLanguages: "",
+        availableLanguages: [],
+        thumbImage: "",
       });
       toast.success("Lesson added successfully");
     }
@@ -70,15 +115,11 @@ const AdminDashboard = () => {
   };
 
   const handleEdit = (lesson) => {
-    setEditingLesson({
-      ...lesson,
-      topics: lesson.topics.join(", "),
-      availableLanguages: lesson.availableLanguages.join(", "),
-    });
+    setEditingLesson(lesson);
   };
 
-  const handleDelete = (id) => {
-    const updatedLessons = lessons.filter((lesson) => lesson.id !== id);
+  const handleDelete = (lessonId) => {
+    const updatedLessons = lessons.filter((lesson) => lesson.lessonId !== lessonId);
     setLessons(updatedLessons);
     localStorage.setItem("lessons", JSON.stringify(updatedLessons));
     toast.success("Lesson deleted successfully");
@@ -87,59 +128,92 @@ const AdminDashboard = () => {
   const renderLessonForm = (lesson, isEditing = false) => (
     <form onSubmit={handleSubmit} className="space-y-4">
       <Input
+        name="lessonId"
+        placeholder="Lesson ID"
+        value={lesson.lessonId}
+        onChange={(e) => handleInputChange("lessonId", e.target.value, isEditing)}
+        required
+      />
+      <Input
         name="title"
         placeholder="Title"
         value={lesson.title}
-        onChange={(e) => handleInputChange(e, isEditing)}
+        onChange={(e) => handleInputChange("title", e.target.value, isEditing)}
         required
       />
       <Input
         name="description"
         placeholder="Description"
         value={lesson.description}
-        onChange={(e) => handleInputChange(e, isEditing)}
+        onChange={(e) => handleInputChange("description", e.target.value, isEditing)}
         required
       />
-      <Input
-        name="topics"
-        placeholder="Topics (comma-separated)"
-        value={lesson.topics}
-        onChange={(e) => handleInputChange(e, isEditing)}
-        required
-      />
+      <div>
+        <h4 className="mb-2">Topics</h4>
+        {topics.map((topic, index) => (
+          <div key={index} className="flex items-center space-x-2">
+            <Checkbox
+              id={`topic-${index}`}
+              checked={lesson.topics.includes(index)}
+              onCheckedChange={(checked) => handleTopicChange(index, checked, isEditing)}
+            />
+            <label htmlFor={`topic-${index}`}>{topic}</label>
+          </div>
+        ))}
+      </div>
       <Input
         name="videoLength"
         placeholder="Video Length"
         value={lesson.videoLength}
-        onChange={(e) => handleInputChange(e, isEditing)}
+        onChange={(e) => handleInputChange("videoLength", e.target.value, isEditing)}
         required
       />
       <Input
         name="timeConsumption"
         placeholder="Time Consumption"
         value={lesson.timeConsumption}
-        onChange={(e) => handleInputChange(e, isEditing)}
+        onChange={(e) => handleInputChange("timeConsumption", e.target.value, isEditing)}
         required
       />
-      <Input
+      <Select
         name="difficultyLevel"
-        placeholder="Difficulty Level"
         value={lesson.difficultyLevel}
-        onChange={(e) => handleInputChange(e, isEditing)}
-        required
-      />
+        onValueChange={(value) => handleInputChange("difficultyLevel", value, isEditing)}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Select difficulty level" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="Beginner">Beginner</SelectItem>
+          <SelectItem value="Intermediate">Intermediate</SelectItem>
+          <SelectItem value="Advanced">Advanced</SelectItem>
+        </SelectContent>
+      </Select>
       <Input
         name="quizQuestions"
         placeholder="Number of Quiz Questions"
         value={lesson.quizQuestions}
-        onChange={(e) => handleInputChange(e, isEditing)}
+        onChange={(e) => handleInputChange("quizQuestions", e.target.value, isEditing)}
         required
       />
+      <div>
+        <h4 className="mb-2">Available Languages</h4>
+        {languages.map((language, index) => (
+          <div key={index} className="flex items-center space-x-2">
+            <Checkbox
+              id={`lang-${index}`}
+              checked={lesson.availableLanguages.includes(index)}
+              onCheckedChange={(checked) => handleLanguageChange(index, checked, isEditing)}
+            />
+            <label htmlFor={`lang-${index}`}>{language}</label>
+          </div>
+        ))}
+      </div>
       <Input
-        name="availableLanguages"
-        placeholder="Available Languages (comma-separated)"
-        value={lesson.availableLanguages}
-        onChange={(e) => handleInputChange(e, isEditing)}
+        name="thumbImage"
+        placeholder="Thumbnail Image URL"
+        value={lesson.thumbImage}
+        onChange={(e) => handleInputChange("thumbImage", e.target.value, isEditing)}
         required
       />
       <Button type="submit">{isEditing ? "Update Lesson" : "Add Lesson"}</Button>
@@ -164,7 +238,7 @@ const AdminDashboard = () => {
       </Card>
       <h2 className="text-xl font-bold mb-4">Existing Lessons</h2>
       {lessons.map((lesson) => (
-        <Card key={lesson.id} className="mb-4">
+        <Card key={lesson.lessonId} className="mb-4">
           <CardContent className="flex justify-between items-center">
             <div>
               <h3 className="font-bold">{lesson.title}</h3>
@@ -174,7 +248,7 @@ const AdminDashboard = () => {
               <Button onClick={() => handleEdit(lesson)} className="mr-2">
                 Edit
               </Button>
-              <Button onClick={() => handleDelete(lesson.id)} variant="destructive">
+              <Button onClick={() => handleDelete(lesson.lessonId)} variant="destructive">
                 Delete
               </Button>
             </div>

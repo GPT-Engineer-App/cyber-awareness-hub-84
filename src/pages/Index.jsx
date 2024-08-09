@@ -9,18 +9,11 @@ import { Shield, Search, ChevronLeft, ChevronRight, Clock, Video, BarChart2, Hel
 const ITEMS_PER_PAGE = 6;
 
 const fetchLessons = async () => {
-  const storedLessons = localStorage.getItem("lessons");
-  if (storedLessons) {
-    return { lessons: JSON.parse(storedLessons) };
-  } else {
-    const response = await fetch('/lessons.json');
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    const data = await response.json();
-    localStorage.setItem("lessons", JSON.stringify(data.lessons));
-    return data;
+  const response = await fetch('/lessons.json');
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
   }
+  return response.json();
 };
 
 const Index = () => {
@@ -38,7 +31,7 @@ const Index = () => {
   const filteredLessons = data.lessons.filter(lesson =>
     lesson.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     lesson.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    lesson.topics.some(topic => topic.toLowerCase().includes(searchTerm.toLowerCase()))
+    data.topics.some((topic, index) => lesson.topics.includes(index) && topic.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const totalPages = Math.ceil(filteredLessons.length / ITEMS_PER_PAGE);
@@ -66,15 +59,16 @@ const Index = () => {
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
           {paginatedLessons.map(lesson => (
-            <Card key={lesson.id} className="flex flex-col">
+            <Card key={lesson.lessonId} className="flex flex-col">
               <CardHeader>
                 <CardTitle>{lesson.title}</CardTitle>
                 <CardDescription>{lesson.description}</CardDescription>
               </CardHeader>
               <CardContent className="flex-grow">
+                <img src={lesson.thumbImage} alt={lesson.title} className="w-full h-32 object-cover mb-4 rounded" />
                 <div className="flex flex-wrap gap-2 mb-2">
-                  {lesson.topics.map((topic, index) => (
-                    <Badge key={index} variant="secondary">{topic}</Badge>
+                  {lesson.topics.map((topicIndex) => (
+                    <Badge key={topicIndex} variant="secondary">{data.topics[topicIndex]}</Badge>
                   ))}
                 </div>
                 <div className="text-sm text-gray-600 mb-2">
@@ -96,7 +90,7 @@ const Index = () => {
               </CardContent>
               <CardFooter>
                 <div className="text-sm text-gray-600">
-                  Available in: {lesson.availableLanguages.join(", ")}
+                  Available in: {lesson.availableLanguages.map(langIndex => data.languages[langIndex]).join(", ")}
                 </div>
               </CardFooter>
             </Card>
