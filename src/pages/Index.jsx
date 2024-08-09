@@ -5,8 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Shield, Search, ChevronLeft, ChevronRight, Clock, Video, BarChart2, HelpCircle } from "lucide-react";
+import { Shield, Search, ChevronLeft, ChevronRight, Clock, Video, BarChart2, HelpCircle, CheckCircle } from "lucide-react";
 import CourseCreator from './CourseCreator';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -24,6 +26,8 @@ const Index = () => {
   const [sortTopic, setSortTopic] = useState('');
   const [sortLanguage, setSortLanguage] = useState('');
   const [showCourseCreator, setShowCourseCreator] = useState(false);
+  const [selectedLessons, setSelectedLessons] = useState([]);
+  const [showSummary, setShowSummary] = useState(false);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['lessons'],
@@ -108,11 +112,21 @@ const Index = () => {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
           {paginatedLessons.map(lesson => (
             <Card key={lesson.lessonId} className="flex flex-col">
-              <CardHeader>
-                <CardTitle>{lesson.title}</CardTitle>
-                <CardDescription>{lesson.description}</CardDescription>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{lesson.title}</CardTitle>
+                <Checkbox
+                  checked={selectedLessons.some(l => l.lessonId === lesson.lessonId)}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      setSelectedLessons([...selectedLessons, lesson]);
+                    } else {
+                      setSelectedLessons(selectedLessons.filter(l => l.lessonId !== lesson.lessonId));
+                    }
+                  }}
+                />
               </CardHeader>
               <CardContent className="flex-grow">
+                <CardDescription>{lesson.description}</CardDescription>
                 <img src={lesson.thumbImage} alt={lesson.title} className="w-full h-32 object-cover mb-4 rounded" />
                 <div className="flex flex-wrap gap-2 mb-2">
                   {lesson.topics.map((topicIndex) => (
@@ -160,6 +174,45 @@ const Index = () => {
             Next <ChevronRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
+
+        <Dialog open={showSummary} onOpenChange={setShowSummary}>
+          <DialogTrigger asChild>
+            <Button 
+              className="mt-4"
+              disabled={selectedLessons.length === 0}
+              onClick={() => setShowSummary(true)}
+            >
+              View Selected Lessons Summary
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Selected Lessons Summary</DialogTitle>
+            </DialogHeader>
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold mb-2">
+                Total Time: {selectedLessons.reduce((total, lesson) => total + parseInt(lesson.timeConsumption), 0)} minutes
+              </h3>
+              <p className="mb-4">
+                You have selected {selectedLessons.length} lesson{selectedLessons.length !== 1 ? 's' : ''}. 
+                Here's a summary of your selection:
+              </p>
+              <ul className="list-disc pl-5 space-y-2">
+                {selectedLessons.map(lesson => (
+                  <li key={lesson.lessonId}>
+                    <strong>{lesson.title}</strong>
+                    <ul className="list-none pl-5 space-y-1">
+                      <li>Difficulty: {lesson.difficultyLevel}</li>
+                      <li>Video Length: {lesson.videoLength}</li>
+                      <li>Time Consumption: {lesson.timeConsumption}</li>
+                      <li>Topics: {lesson.topics.map(topicIndex => data.topics[topicIndex]).join(', ')}</li>
+                    </ul>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
