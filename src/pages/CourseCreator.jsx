@@ -34,9 +34,7 @@ const CourseCreator = ({ lessons, topics, onCustomCourseCreation }) => {
     onCustomCourseCreation(selected);
   };
 
-  const totalDuration = useMemo(() => {
-    return selectedLessons.reduce((total, lesson) => total + parseInt(lesson.timeConsumption), 0);
-  }, [selectedLessons]);
+  // Remove this useMemo block as it's not needed in CourseCreator
 
   return (
     <Card className="mb-6">
