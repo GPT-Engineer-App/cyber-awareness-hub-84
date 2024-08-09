@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Shield, Search, ChevronLeft, ChevronRight, Clock, Video, BarChart2, HelpCircle } from "lucide-react";
+import CourseCreator from './CourseCreator';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -22,6 +23,7 @@ const Index = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortTopic, setSortTopic] = useState('');
   const [sortLanguage, setSortLanguage] = useState('');
+  const [showCourseCreator, setShowCourseCreator] = useState(false);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['lessons'],
@@ -63,7 +65,10 @@ const Index = () => {
           Cyber and Data Security Awareness
         </h1>
         
-        <div className="mb-6 flex space-x-4">
+        <div className="mb-6 flex space-x-4 items-center">
+          <Button onClick={() => setShowCourseCreator(!showCourseCreator)}>
+            {showCourseCreator ? 'Hide Course Creator' : 'Create Custom Course'}
+          </Button>
           <div className="relative flex-grow">
             <Input
               type="text"
@@ -97,6 +102,8 @@ const Index = () => {
             </SelectContent>
           </Select>
         </div>
+
+        {showCourseCreator && <CourseCreator lessons={data.lessons} topics={data.topics} />}
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
           {paginatedLessons.map(lesson => (
