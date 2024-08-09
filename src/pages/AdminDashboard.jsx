@@ -59,7 +59,7 @@ const AdminDashboard = () => {
         <DialogTrigger asChild>
           <Button onClick={() => setEditingLesson(null)}>Add New Lesson</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[700px]">
           <DialogHeader>
             <DialogTitle>{editingLesson ? "Edit Lesson" : "Add New Lesson"}</DialogTitle>
           </DialogHeader>

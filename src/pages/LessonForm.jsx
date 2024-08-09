@@ -3,6 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 const LessonForm = ({ lesson, topics, languages, onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -74,47 +76,74 @@ const LessonForm = ({ lesson, topics, languages, onSubmit }) => {
         onChange={(e) => handleInputChange("description", e.target.value)}
         required
       />
-      <div>
-        <h4 className="mb-2">Topics</h4>
-        {topics.map((topic, index) => (
-          <div key={index} className="flex items-center space-x-2">
-            <Checkbox
-              id={`topic-${index}`}
-              checked={formData.topics.includes(index)}
-              onCheckedChange={(checked) => handleTopicChange(index, checked)}
-            />
-            <label htmlFor={`topic-${index}`}>{topic}</label>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <h4 className="mb-2">Topics</h4>
+          <div className="h-48 overflow-y-auto">
+            {topics.map((topic, index) => (
+              <div key={index} className="flex items-center space-x-2 mb-2">
+                <Checkbox
+                  id={`topic-${index}`}
+                  checked={formData.topics.includes(index)}
+                  onCheckedChange={(checked) => handleTopicChange(index, checked)}
+                />
+                <label htmlFor={`topic-${index}`}>{topic}</label>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
+        <div>
+          <h4 className="mb-2">Available Languages</h4>
+          <div className="h-48 overflow-y-auto">
+            {languages.map((language, index) => (
+              <div key={index} className="flex items-center space-x-2 mb-2">
+                <Checkbox
+                  id={`lang-${index}`}
+                  checked={formData.availableLanguages.includes(index)}
+                  onCheckedChange={(checked) => handleLanguageChange(index, checked)}
+                />
+                <label htmlFor={`lang-${index}`}>{language}</label>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-      <Input
-        name="videoLength"
-        placeholder="Video Length"
-        value={formData.videoLength}
-        onChange={(e) => handleInputChange("videoLength", e.target.value)}
-        required
-      />
-      <Input
-        name="timeConsumption"
-        placeholder="Time Consumption"
-        value={formData.timeConsumption}
-        onChange={(e) => handleInputChange("timeConsumption", e.target.value)}
-        required
-      />
-      <Select
+      <div className="grid grid-cols-2 gap-4">
+        <Input
+          name="videoLength"
+          placeholder="Video Length"
+          value={formData.videoLength}
+          onChange={(e) => handleInputChange("videoLength", e.target.value)}
+          required
+        />
+        <Input
+          name="timeConsumption"
+          placeholder="Time Consumption"
+          value={formData.timeConsumption}
+          onChange={(e) => handleInputChange("timeConsumption", e.target.value)}
+          required
+        />
+      </div>
+      <RadioGroup
         name="difficultyLevel"
         value={formData.difficultyLevel}
         onValueChange={(value) => handleInputChange("difficultyLevel", value)}
       >
-        <SelectTrigger>
-          <SelectValue placeholder="Select difficulty level" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="Beginner">Beginner</SelectItem>
-          <SelectItem value="Intermediate">Intermediate</SelectItem>
-          <SelectItem value="Advanced">Advanced</SelectItem>
-        </SelectContent>
-      </Select>
+        <div className="flex space-x-4">
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="Basic" id="basic" />
+            <Label htmlFor="basic">Basic</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="Intermediate" id="intermediate" />
+            <Label htmlFor="intermediate">Intermediate</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="Advanced" id="advanced" />
+            <Label htmlFor="advanced">Advanced</Label>
+          </div>
+        </div>
+      </RadioGroup>
       <Input
         name="quizQuestions"
         placeholder="Number of Quiz Questions"
@@ -122,19 +151,6 @@ const LessonForm = ({ lesson, topics, languages, onSubmit }) => {
         onChange={(e) => handleInputChange("quizQuestions", e.target.value)}
         required
       />
-      <div>
-        <h4 className="mb-2">Available Languages</h4>
-        {languages.map((language, index) => (
-          <div key={index} className="flex items-center space-x-2">
-            <Checkbox
-              id={`lang-${index}`}
-              checked={formData.availableLanguages.includes(index)}
-              onCheckedChange={(checked) => handleLanguageChange(index, checked)}
-            />
-            <label htmlFor={`lang-${index}`}>{language}</label>
-          </div>
-        ))}
-      </div>
       <Input
         name="thumbImage"
         placeholder="Thumbnail Image URL"
