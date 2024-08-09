@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Shield, Search, ChevronLeft, ChevronRight, Clock, Video, BarChart2, HelpCircle, Plus } from "lucide-react";
+import { Shield, Search, ChevronLeft, ChevronRight, Clock, Video, BarChart2, HelpCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 import CourseCreator from './CourseCreator';
 import CourseBuilder from './CourseBuilder';
 
@@ -42,6 +43,7 @@ const Index = () => {
         return [...prev, lesson];
       }
     });
+    setShowCourseBuilder(true);
   };
 
   const filteredAndSortedLessons = useMemo(() => {
@@ -125,18 +127,18 @@ const Index = () => {
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
           {paginatedLessons.map(lesson => (
-            <Card key={lesson.lessonId} className="flex flex-col">
+            <Card 
+              key={lesson.lessonId} 
+              className={cn(
+                "flex flex-col cursor-pointer transition-colors duration-200",
+                selectedLessons.some(l => l.lessonId === lesson.lessonId) 
+                  ? "bg-blue-50 border-blue-500" 
+                  : "hover:bg-gray-50"
+              )}
+              onClick={() => handleLessonSelect(lesson)}
+            >
               <CardHeader>
-                <CardTitle className="flex justify-between items-center">
-                  <span>{lesson.title}</span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleLessonSelect(lesson)}
-                  >
-                    <Plus className={`h-4 w-4 ${selectedLessons.some(l => l.lessonId === lesson.lessonId) ? 'text-green-500' : ''}`} />
-                  </Button>
-                </CardTitle>
+                <CardTitle>{lesson.title}</CardTitle>
                 <CardDescription>{lesson.description}</CardDescription>
               </CardHeader>
               <CardContent className="flex-grow">
