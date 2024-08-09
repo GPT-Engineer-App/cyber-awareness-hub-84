@@ -47,7 +47,7 @@ const Index = () => {
   };
 
   const isLessonSelected = (lesson) => {
-    return selectedLessons.some(l => l.lessonId === lesson.lessonId);
+    return selectedLessons.some(l => l.lessonId === lesson.lessonId && l.title === lesson.title);
   };
 
   const filteredAndSortedLessons = useMemo(() => {
@@ -136,7 +136,7 @@ const Index = () => {
               className={cn(
                 "relative",
                 "flex flex-col transition-all duration-200",
-                isLessonSelected(lesson)
+                selectedLessons.some(l => l.lessonId === lesson.lessonId) 
                   ? "bg-blue-100 border-2 border-blue-500 shadow-md" 
                   : "hover:bg-gray-50 border border-transparent"
               )}
