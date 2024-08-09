@@ -8,17 +8,21 @@ import LessonForm from "./LessonForm";
 
 // Simulated API functions
 const fetchLessonsData = async () => {
+  const storedData = localStorage.getItem('lessonsData');
+  if (storedData) {
+    return JSON.parse(storedData);
+  }
   const response = await fetch('/lessons.json');
   if (!response.ok) {
     throw new Error('Failed to fetch lessons data');
   }
-  return response.json();
+  const data = await response.json();
+  localStorage.setItem('lessonsData', JSON.stringify(data));
+  return data;
 };
 
 const updateLessonsData = async (newLessons) => {
-  // In a real backend, this would update the lessons.json file
-  // For now, we'll just simulate a delay and return the data
-  await new Promise(resolve => setTimeout(resolve, 500));
+  localStorage.setItem('lessonsData', JSON.stringify(newLessons));
   return newLessons;
 };
 
@@ -26,6 +30,13 @@ const AdminDashboard = () => {
   const [editingLesson, setEditingLesson] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    toast.warning("Changes are saved locally and will be lost when clearing browser data.", {
+      duration: 5000,
+      position: "top-center",
+    });
+  }, []);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['lessonsData'],
