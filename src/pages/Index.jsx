@@ -33,6 +33,7 @@ const Index = () => {
   const handleCustomCourseCreation = (lessons) => {
     setSelectedLessons(lessons);
     setShowCourseBuilder(true);
+    setShowCourseCreator(false);  // Hide CourseCreator after generating a course
   };
 
   const { data, isLoading, error } = useQuery({

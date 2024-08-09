@@ -8,7 +8,6 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 const CourseCreator = ({ lessons, topics, onCustomCourseCreation }) => {
   const [prompt, setPrompt] = useState('');
   const [maxDuration, setMaxDuration] = useState(120);
-  const [selectedLessons, setSelectedLessons] = useState([]);
 
   const handlePromptSubmit = (e) => {
     e.preventDefault();
@@ -32,7 +31,6 @@ const CourseCreator = ({ lessons, topics, onCustomCourseCreation }) => {
       }
       if (totalDuration >= maxDuration) break;
     }
-    setSelectedLessons(selected);
     onCustomCourseCreation(selected);
   };
 
@@ -61,33 +59,7 @@ const CourseCreator = ({ lessons, topics, onCustomCourseCreation }) => {
           <Button type="submit">Generate Course</Button>
         </form>
 
-        {selectedLessons.length > 0 && (
-          <div className="mt-4">
-            <h3 className="text-lg font-semibold mb-2">Generated Course (Total Duration: {totalDuration} minutes)</h3>
-            <Accordion type="single" collapsible className="w-full">
-              {selectedLessons.map((lesson, index) => (
-                <AccordionItem key={lesson.lessonId} value={`item-${index}`}>
-                  <AccordionTrigger>
-                    <div className="flex justify-between items-center w-full">
-                      <span>{lesson.title}</span>
-                      <span className="text-sm text-gray-500">{lesson.timeConsumption} min</span>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <p className="mb-2">{lesson.description}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {lesson.topics.map(topicIndex => (
-                        <Badge key={topicIndex} variant="secondary">
-                          {topics[topicIndex]}
-                        </Badge>
-                      ))}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
-        )}
+        {/* Remove the selectedLessons display from here */}
       </CardContent>
     </Card>
   );

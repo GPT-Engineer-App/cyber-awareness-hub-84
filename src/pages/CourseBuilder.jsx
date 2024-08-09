@@ -60,22 +60,31 @@ This course is suitable for individuals looking to ${averageDifficulty === 'Basi
       <CardContent>
         <div className="mb-4">
           <h3 className="text-lg font-semibold mb-2">Selected Lessons:</h3>
-          {selectedLessons.map(lesson => (
-            <div key={lesson.lessonId} className="mb-2 p-2 bg-gray-100 rounded">
-              <h4 className="font-medium">{lesson.title}</h4>
-              <div className="flex items-center space-x-4 text-sm text-gray-600">
-                <span><Clock className="inline mr-1 h-4 w-4" />{lesson.timeConsumption}</span>
-                <span><Video className="inline mr-1 h-4 w-4" />{lesson.videoLength}</span>
-                <span><BarChart2 className="inline mr-1 h-4 w-4" />{lesson.difficultyLevel}</span>
-                <span><HelpCircle className="inline mr-1 h-4 w-4" />{lesson.quizQuestions} questions</span>
-              </div>
-              <div className="mt-1">
-                {lesson.topics.map(topic => (
-                  <Badge key={topic} variant="secondary" className="mr-1">{topic}</Badge>
-                ))}
-              </div>
-            </div>
-          ))}
+          <Accordion type="single" collapsible className="w-full">
+            {selectedLessons.map((lesson, index) => (
+              <AccordionItem key={lesson.lessonId} value={`item-${index}`}>
+                <AccordionTrigger>
+                  <div className="flex justify-between items-center w-full">
+                    <span>{lesson.title}</span>
+                    <span className="text-sm text-gray-500">{lesson.timeConsumption} min</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <p className="mb-2">{lesson.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {lesson.topics.map(topic => (
+                      <Badge key={topic} variant="secondary">{topic}</Badge>
+                    ))}
+                  </div>
+                  <div className="mt-2 text-sm text-gray-600">
+                    <span><Video className="inline mr-1 h-4 w-4" />{lesson.videoLength}</span>
+                    <span className="ml-4"><BarChart2 className="inline mr-1 h-4 w-4" />{lesson.difficultyLevel}</span>
+                    <span className="ml-4"><HelpCircle className="inline mr-1 h-4 w-4" />{lesson.quizQuestions} questions</span>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
         <div>
           <h3 className="text-lg font-semibold mb-2">Course Description:</h3>
