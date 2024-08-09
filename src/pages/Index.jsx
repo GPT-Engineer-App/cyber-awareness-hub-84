@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Shield, Search, ChevronLeft, ChevronRight, Clock, Video, BarChart2, HelpCircle } from "lucide-react";
+import { Shield, Search, ChevronLeft, ChevronRight, Clock, Video, BarChart2, HelpCircle, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import CourseCreator from './CourseCreator';
 import CourseBuilder from './CourseBuilder';
@@ -130,13 +130,19 @@ const Index = () => {
             <Card 
               key={lesson.lessonId} 
               className={cn(
-                "flex flex-col cursor-pointer transition-colors duration-200",
+                "relative",
+                "flex flex-col cursor-pointer transition-all duration-200",
                 selectedLessons.some(l => l.lessonId === lesson.lessonId) 
-                  ? "bg-blue-50 border-blue-500" 
-                  : "hover:bg-gray-50"
+                  ? "bg-blue-100 border-2 border-blue-500 shadow-md" 
+                  : "hover:bg-gray-50 border border-transparent"
               )}
               onClick={() => handleLessonSelect(lesson)}
             >
+              {selectedLessons.some(l => l.lessonId === lesson.lessonId) && (
+                <div className="absolute top-2 right-2 bg-blue-500 text-white rounded-full p-1">
+                  <Check className="h-4 w-4" />
+                </div>
+              )}
               <CardHeader>
                 <CardTitle>{lesson.title}</CardTitle>
                 <CardDescription>{lesson.description}</CardDescription>
