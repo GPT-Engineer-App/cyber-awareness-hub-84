@@ -28,10 +28,9 @@ const Index = () => {
     queryFn: fetchLessons,
   });
 
-  if (isLoading) return <div className="text-center mt-8">Loading...</div>;
-  if (error) return <div className="text-center mt-8 text-red-500">Error: {error.message}</div>;
-
   const filteredAndSortedLessons = useMemo(() => {
+    if (!data) return [];
+    
     let result = data.lessons.filter(lesson =>
       lesson.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lesson.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -49,9 +48,12 @@ const Index = () => {
     return result;
   }, [data, searchTerm, sortTopic, sortLanguage]);
 
-  const totalPages = Math.ceil(filteredAndSortedLessons.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil((filteredAndSortedLessons?.length || 0) / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedLessons = filteredAndSortedLessons.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  if (isLoading) return <div className="text-center mt-8">Loading...</div>;
+  if (error) return <div className="text-center mt-8 text-red-500">Error: {error.message}</div>;
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
