@@ -46,6 +46,11 @@ const Index = () => {
     setShowCourseBuilder(true);
   };
 
+  const handleResetCourse = () => {
+    setSelectedLessons([]);
+    setShowCourseBuilder(false);
+  };
+
   const isLessonSelected = (lesson) => {
     return selectedLessons.some(l => l.lessonId === lesson.lessonId && l.title === lesson.title);
   };
@@ -127,7 +132,7 @@ const Index = () => {
         </div>
 
         {showCourseCreator && data && <CourseCreator lessons={data.lessons} topics={data.topics} />}
-        {showCourseBuilder && <CourseBuilder selectedLessons={selectedLessons} />}
+        {showCourseBuilder && <CourseBuilder selectedLessons={selectedLessons} onReset={handleResetCourse} />}
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
           {paginatedLessons.map(lesson => (

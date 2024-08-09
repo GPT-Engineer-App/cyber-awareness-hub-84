@@ -3,14 +3,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { Clock, Video, BarChart2, HelpCircle } from "lucide-react";
+import { Clock, Video, BarChart2, HelpCircle, RefreshCw } from "lucide-react";
 
-const CourseBuilder = ({ selectedLessons }) => {
+const CourseBuilder = ({ selectedLessons, onReset }) => {
   const [courseDescription, setCourseDescription] = useState('');
 
   useEffect(() => {
     generateCourseDescription();
   }, [selectedLessons]);
+
+  const handleReset = () => {
+    onReset();
+    setCourseDescription('');
+  };
 
   const generateCourseDescription = () => {
     if (selectedLessons.length === 0) {
@@ -81,7 +86,13 @@ This course is suitable for individuals looking to ${averageDifficulty === 'Basi
             className="w-full"
           />
         </div>
-        <Button onClick={generateCourseDescription} className="mt-4">Regenerate Description</Button>
+        <div className="flex justify-between mt-4">
+          <Button onClick={generateCourseDescription}>Regenerate Description</Button>
+          <Button onClick={handleReset} variant="outline">
+            <RefreshCw className="mr-2 h-4 w-4" />
+            Reset Course
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
