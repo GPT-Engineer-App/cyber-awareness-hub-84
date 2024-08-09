@@ -14,9 +14,17 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const storedLessons = localStorage.getItem('lessons');
+      if (storedLessons) {
+        setLessons(JSON.parse(storedLessons));
+      } else {
+        const response = await fetch('/lessons.json');
+        const data = await response.json();
+        setLessons(data.lessons);
+        localStorage.setItem('lessons', JSON.stringify(data.lessons));
+      }
       const response = await fetch('/lessons.json');
       const data = await response.json();
-      setLessons(data.lessons);
       setTopics(data.topics);
       setLanguages(data.languages);
     };
@@ -29,13 +37,14 @@ const AdminDashboard = () => {
       updatedLessons = lessons.map((l) =>
         l.lessonId === lesson.lessonId ? lesson : l
       );
-      toast.success("Lesson updated successfully");
+      toast.success("Lektion opdateret");
     } else {
       const newLessonId = `SEC${String(lessons.length + 1).padStart(3, '0')}`;
       updatedLessons = [...lessons, { ...lesson, lessonId: newLessonId }];
-      toast.success("Lesson added successfully");
+      toast.success("Lektion tilføjet");
     }
     setLessons(updatedLessons);
+    localStorage.setItem('lessons', JSON.stringify(updatedLessons));
     setIsDialogOpen(false);
     setEditingLesson(null);
   };
@@ -48,7 +57,8 @@ const AdminDashboard = () => {
   const handleDelete = (lessonId) => {
     const updatedLessons = lessons.filter((lesson) => lesson.lessonId !== lessonId);
     setLessons(updatedLessons);
-    toast.success("Lesson deleted successfully");
+    localStorage.setItem('lessons', JSON.stringify(updatedLessons));
+    toast.success("Lektion slettet");
   };
 
   return (

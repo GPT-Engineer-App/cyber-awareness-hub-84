@@ -62,11 +62,17 @@ const translations = {
 };
 
 const fetchLessons = async () => {
+  const storedLessons = localStorage.getItem('lessons');
+  if (storedLessons) {
+    return { lessons: JSON.parse(storedLessons) };
+  }
   const response = await fetch('/lessons.json');
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
-  return response.json();
+  const data = await response.json();
+  localStorage.setItem('lessons', JSON.stringify(data.lessons));
+  return data;
 };
 
 const Index = () => {
