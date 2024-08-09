@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
-const CourseCreator = ({ lessons, topics }) => {
+const CourseCreator = ({ lessons, topics, onCustomCourseCreation }) => {
   const [prompt, setPrompt] = useState('');
   const [maxDuration, setMaxDuration] = useState(120);
   const [selectedLessons, setSelectedLessons] = useState([]);
@@ -33,6 +33,7 @@ const CourseCreator = ({ lessons, topics }) => {
       if (totalDuration >= maxDuration) break;
     }
     setSelectedLessons(selected);
+    onCustomCourseCreation(selected);
   };
 
   const totalDuration = useMemo(() => {

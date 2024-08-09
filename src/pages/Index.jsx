@@ -30,6 +30,11 @@ const Index = () => {
   const [showCourseBuilder, setShowCourseBuilder] = useState(false);
   const [selectedLessons, setSelectedLessons] = useState([]);
 
+  const handleCustomCourseCreation = (lessons) => {
+    setSelectedLessons(lessons);
+    setShowCourseBuilder(true);
+  };
+
   const { data, isLoading, error } = useQuery({
     queryKey: ['lessons'],
     queryFn: fetchLessons,
@@ -131,8 +136,19 @@ const Index = () => {
           </Select>
         </div>
 
-        {showCourseCreator && data && <CourseCreator lessons={data.lessons} topics={data.topics} />}
-        {showCourseBuilder && <CourseBuilder selectedLessons={selectedLessons} onReset={handleResetCourse} />}
+        {showCourseCreator && data && (
+          <CourseCreator 
+            lessons={data.lessons} 
+            topics={data.topics} 
+            onCustomCourseCreation={handleCustomCourseCreation}
+          />
+        )}
+        {showCourseBuilder && (
+          <CourseBuilder 
+            selectedLessons={selectedLessons} 
+            onReset={handleResetCourse} 
+          />
+        )}
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
           {paginatedLessons.map(lesson => (
