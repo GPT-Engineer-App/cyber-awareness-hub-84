@@ -117,11 +117,13 @@ const Index = () => {
                 <Checkbox
                   checked={selectedLessons.some(l => l.lessonId === lesson.lessonId)}
                   onCheckedChange={(checked) => {
-                    if (checked) {
-                      setSelectedLessons([...selectedLessons, lesson]);
-                    } else {
-                      setSelectedLessons(selectedLessons.filter(l => l.lessonId !== lesson.lessonId));
-                    }
+                    setSelectedLessons(prev => {
+                      if (checked) {
+                        return [...prev, lesson];
+                      } else {
+                        return prev.filter(l => l.lessonId !== lesson.lessonId);
+                      }
+                    });
                   }}
                 />
               </CardHeader>
