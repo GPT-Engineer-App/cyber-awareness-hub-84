@@ -32,6 +32,11 @@ const Index = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['lessons'],
     queryFn: fetchLessons,
+    onError: (error) => {
+      console.error("Failed to fetch lessons:", error);
+      // You could also use a toast notification here
+      // toast.error("Failed to load lessons. Please try again later.");
+    }
   });
 
   const handleLessonSelect = (lesson) => {
