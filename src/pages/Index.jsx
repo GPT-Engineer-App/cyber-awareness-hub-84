@@ -111,9 +111,9 @@ const Index = () => {
   };
 
   const filteredAndSortedLessons = useMemo(() => {
-    if (!data || !data.lessons) return [];
-    
-    let result = data.lessons.filter(lesson =>
+    if (!lessonsData || !lessonsData.lessons) return [];
+  
+    let result = lessonsData.lessons.filter(lesson =>
       lesson.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lesson.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       topics.some((topic, index) => lesson.topics.includes(index) && topic.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -128,10 +128,9 @@ const Index = () => {
     }
 
     return result;
-  }, [data, searchTerm, sortTopic, sortLanguage, topics]);
+  }, [lessonsData, searchTerm, sortTopic, sortLanguage, topics]);
 
-  if (isLoading) return <div className="text-center mt-8">{t.loading}</div>;
-  if (error) return <div className="text-center mt-8 text-red-500">{t.error} {error.message}</div>;
+  if (!lessonsData) return <div className="text-center mt-8">{t.loading}</div>;
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -185,10 +184,10 @@ const Index = () => {
           </Select>
         </div>
 
-        {showCourseCreator && data && (
+        {showCourseCreator && lessonsData && (
           <CourseCreator 
-            lessons={data.lessons} 
-            topics={data.topics} 
+            lessons={lessonsData.lessons} 
+            topics={lessonsData.topics} 
             onCustomCourseCreation={handleCustomCourseCreation}
           />
         )}
@@ -229,7 +228,7 @@ const Index = () => {
                 <div className="flex flex-wrap gap-2 mb-2">
                   {Array.isArray(lesson.topics) 
                     ? lesson.topics.map((topicIndex) => (
-                        <Badge key={topicIndex} variant="secondary">{data.topics[topicIndex]}</Badge>
+                        <Badge key={topicIndex} variant="secondary">{lessonsData.topics[topicIndex]}</Badge>
                       ))
                     : Object.keys(lesson.topics).map((topic) => (
                         <Badge key={topic} variant="secondary">{topic}</Badge>
@@ -255,7 +254,7 @@ const Index = () => {
               </CardContent>
               <CardFooter>
                 <div className="text-sm text-gray-600">
-                  {t.availableIn}: {lesson.availableLanguages.map(langIndex => data.languages[langIndex]).join(", ")}
+                  {t.availableIn}: {lesson.availableLanguages.map(langIndex => lessonsData.languages[langIndex]).join(", ")}
                 </div>
               </CardFooter>
             </Card>
