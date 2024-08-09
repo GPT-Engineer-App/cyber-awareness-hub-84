@@ -2,76 +2,35 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import LessonForm from "./LessonForm";
-
-// Simulated API functions
-const fetchLessonsData = async () => {
-  const storedData = localStorage.getItem('lessonsData');
-  if (storedData) {
-    return JSON.parse(storedData);
-  }
-  const response = await fetch('/lessons.json');
-  if (!response.ok) {
-    throw new Error('Failed to fetch lessons data');
-  }
-  const data = await response.json();
-  localStorage.setItem('lessonsData', JSON.stringify(data));
-  return data;
-};
-
-const updateLessonsData = async (newLessons) => {
-  localStorage.setItem('lessonsData', JSON.stringify(newLessons));
-  return newLessons;
-};
+import { getLessonsData, addLesson, updateLesson, deleteLesson } from "../utils/lessonStorage";
 
 const AdminDashboard = () => {
+  const [lessonsData, setLessonsData] = useState(null);
   const [editingLesson, setEditingLesson] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const queryClient = useQueryClient();
 
   useEffect(() => {
+    const data = getLessonsData();
+    setLessonsData(data);
     toast.warning("Changes are saved locally and will be lost when clearing browser data.", {
       duration: 5000,
       position: "top-center",
     });
   }, []);
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['lessonsData'],
-    queryFn: fetchLessonsData,
-  });
-
-  const mutation = useMutation({
-    mutationFn: updateLessonsData,
-    onSuccess: (data) => {
-      queryClient.setQueryData(['lessonsData'], data);
-      toast.success("Lessons updated successfully");
-    },
-    onError: (error) => {
-      toast.error(`Error updating lessons: ${error.message}`);
-    },
-  });
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-
-  const { lessons, topics, languages } = data;
-
   const handleSubmit = (lesson) => {
-    let updatedLessons;
     if (editingLesson) {
-      updatedLessons = lessons.map((l) =>
-        l.lessonId === lesson.lessonId ? lesson : l
-      );
+      updateLesson(lesson);
     } else {
-      const newLessonId = `SEC${String(lessons.length + 1).padStart(3, '0')}`;
-      updatedLessons = [...lessons, { ...lesson, lessonId: newLessonId }];
+      const newLessonId = `SEC${String(lessonsData.lessons.length + 1).padStart(3, '0')}`;
+      addLesson({ ...lesson, lessonId: newLessonId });
     }
-    mutation.mutate({ ...data, lessons: updatedLessons });
+    setLessonsData(getLessonsData());
     setIsDialogOpen(false);
     setEditingLesson(null);
+    toast.success("Lesson saved successfully");
   };
 
   const handleEdit = (lesson) => {
@@ -80,9 +39,14 @@ const AdminDashboard = () => {
   };
 
   const handleDelete = (lessonId) => {
-    const updatedLessons = lessons.filter((lesson) => lesson.lessonId !== lessonId);
-    mutation.mutate({ ...data, lessons: updatedLessons });
+    deleteLesson(lessonId);
+    setLessonsData(getLessonsData());
+    toast.success("Lesson deleted successfully");
   };
+
+  if (!lessonsData) return <div>Loading...</div>;
+
+  const { lessons, topics, languages } = lessonsData;
 
   return (
     <div className="container mx-auto p-4">

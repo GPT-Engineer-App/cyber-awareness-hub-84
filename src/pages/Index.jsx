@@ -61,13 +61,7 @@ const translations = {
   },
 };
 
-const fetchLessons = async () => {
-  const response = await fetch('/lessons.json');
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return response.json();
-};
+import { getLessonsData } from '../utils/lessonStorage';
 
 const Index = () => {
   const { language } = useLanguage();
@@ -79,6 +73,12 @@ const Index = () => {
   const [showCourseCreator, setShowCourseCreator] = useState(false);
   const [showCourseBuilder, setShowCourseBuilder] = useState(false);
   const [selectedLessons, setSelectedLessons] = useState([]);
+  const [lessonsData, setLessonsData] = useState(null);
+
+  useEffect(() => {
+    const data = getLessonsData();
+    setLessonsData(data);
+  }, []);
 
   const handleCustomCourseCreation = (lessons) => {
     setSelectedLessons(lessons);
@@ -86,13 +86,9 @@ const Index = () => {
     setShowCourseCreator(false);
   };
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['lessons'],
-    queryFn: fetchLessons,
-  });
+  if (!lessonsData) return <div className="text-center mt-8">{t.loading}</div>;
 
-  const topics = data?.topics || [];
-  const languages = data?.languages || [];
+  const { lessons, topics, languages } = lessonsData;
 
   const handleLessonSelect = (lesson, isChecked) => {
     setSelectedLessons((prev) => {
