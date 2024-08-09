@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -69,7 +69,7 @@ const fetchLessons = async () => {
   return response.json();
 };
 
-const Index = () => {
+const Index = React.memo(() => {
   const { language } = useLanguage();
   const t = translations[language];
 
@@ -296,6 +296,6 @@ const Index = () => {
       )}
     </div>
   );
-};
+});
 
 export default Index;
