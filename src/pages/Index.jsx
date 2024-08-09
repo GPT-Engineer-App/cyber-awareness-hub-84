@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Shield, Search, ChevronLeft, ChevronRight, Clock, Video, BarChart2, HelpCircle, Check } from "lucide-react";
@@ -29,6 +30,7 @@ const Index = () => {
   const [showCourseCreator, setShowCourseCreator] = useState(false);
   const [showCourseBuilder, setShowCourseBuilder] = useState(false);
   const [selectedLessons, setSelectedLessons] = useState([]);
+  const [language, setLanguage] = useState('en'); // 'en' for English, 'da' for Danish
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['lessons'],
@@ -87,20 +89,36 @@ const Index = () => {
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold mb-8 text-center text-blue-600">
           <Shield className="inline-block mr-2 h-10 w-10" />
-          Cyber and Data Security Awareness
+          {language === 'en' ? 'Cyber and Data Security Awareness' : 'Cyber- og Datasikkerhedsbevidsthed'}
         </h1>
         
         <div className="mb-6 flex space-x-4 items-center">
           <Button onClick={() => setShowCourseCreator(!showCourseCreator)}>
-            {showCourseCreator ? 'Hide Course Creator' : 'Create Custom Course'}
+            {showCourseCreator 
+              ? (language === 'en' ? 'Hide Course Creator' : 'Skjul Kursus Skaber') 
+              : (language === 'en' ? 'Create Custom Course' : 'Opret Tilpasset Kursus')}
           </Button>
           <Button onClick={() => setShowCourseBuilder(!showCourseBuilder)}>
-            {showCourseBuilder ? 'Hide Course Builder' : 'Build Course'}
+            {showCourseBuilder 
+              ? (language === 'en' ? 'Hide Course Builder' : 'Skjul Kursus Bygger') 
+              : (language === 'en' ? 'Build Course' : 'Byg Kursus')}
           </Button>
+          <div className="flex items-center space-x-2">
+            <Label htmlFor="language-select">Language:</Label>
+            <Select value={language} onValueChange={setLanguage}>
+              <SelectTrigger id="language-select" className="w-[120px]">
+                <SelectValue placeholder="Select language" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="en">English</SelectItem>
+                <SelectItem value="da">Dansk</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <div className="relative flex-grow">
             <Input
               type="text"
-              placeholder="Search lessons..."
+              placeholder={language === 'en' ? "Search lessons..." : "Søg lektioner..."}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -109,10 +127,10 @@ const Index = () => {
           </div>
           <Select value={sortTopic} onValueChange={setSortTopic}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Sort by Topic" />
+              <SelectValue placeholder={language === 'en' ? "Sort by Topic" : "Sortér efter emne"} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Topics</SelectItem>
+              <SelectItem value="all">{language === 'en' ? "All Topics" : "Alle emner"}</SelectItem>
               {data.topics.map((topic, index) => (
                 <SelectItem key={index} value={index.toString()}>{topic}</SelectItem>
               ))}
@@ -120,10 +138,10 @@ const Index = () => {
           </Select>
           <Select value={sortLanguage} onValueChange={setSortLanguage}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Sort by Language" />
+              <SelectValue placeholder={language === 'en' ? "Sort by Language" : "Sortér efter sprog"} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Languages</SelectItem>
+              <SelectItem value="all">{language === 'en' ? "All Languages" : "Alle sprog"}</SelectItem>
               {data.languages.map((language, index) => (
                 <SelectItem key={index} value={index.toString()}>{language}</SelectItem>
               ))}
@@ -193,14 +211,14 @@ const Index = () => {
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
           >
-            <ChevronLeft className="mr-2 h-4 w-4" /> Previous
+            <ChevronLeft className="mr-2 h-4 w-4" /> {language === 'en' ? 'Previous' : 'Forrige'}
           </Button>
-          <span>Page {currentPage} of {totalPages}</span>
+          <span>{language === 'en' ? `Page ${currentPage} of ${totalPages}` : `Side ${currentPage} af ${totalPages}`}</span>
           <Button
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
           >
-            Next <ChevronRight className="ml-2 h-4 w-4" />
+            {language === 'en' ? 'Next' : 'Næste'} <ChevronRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
       </div>
