@@ -46,6 +46,8 @@ const Index = () => {
     setShowCourseBuilder(true);
   };
 
+  const isLessonSelected = (lessonId) => selectedLessons.some((l) => l.lessonId === lessonId);
+
   const filteredAndSortedLessons = useMemo(() => {
     if (!data) return [];
     
@@ -132,13 +134,13 @@ const Index = () => {
               className={cn(
                 "relative",
                 "flex flex-col cursor-pointer transition-all duration-200",
-                selectedLessons.some(l => l.lessonId === lesson.lessonId) 
+                isLessonSelected(lesson.lessonId)
                   ? "bg-blue-100 border-2 border-blue-500 shadow-md" 
                   : "hover:bg-gray-50 border border-transparent"
               )}
               onClick={() => handleLessonSelect(lesson)}
             >
-              {selectedLessons.some(l => l.lessonId === lesson.lessonId) && (
+              {isLessonSelected(lesson.lessonId) && (
                 <div className="absolute top-2 right-2 bg-blue-500 text-white rounded-full p-1">
                   <Check className="h-4 w-4" />
                 </div>
