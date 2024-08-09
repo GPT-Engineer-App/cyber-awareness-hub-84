@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -10,7 +10,7 @@ import { LanguageProvider } from './LanguageContext';
 
 const queryClient = new QueryClient();
 
-const App = React.memo(() => {
+const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   return (
@@ -34,6 +34,6 @@ const App = React.memo(() => {
       </QueryClientProvider>
     </LanguageProvider>
   );
-});
+};
 
 export default App;
