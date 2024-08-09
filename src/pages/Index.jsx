@@ -194,7 +194,7 @@ const Index = () => {
                   .filter(([_, isSelected]) => isSelected)
                   .reduce((total, [lessonId, _]) => {
                     const lesson = data.lessons.find(l => l.lessonId === lessonId);
-                    return total + parseInt(lesson.timeConsumption);
+                    return total + (lesson && lesson.timeConsumption ? parseInt(lesson.timeConsumption) : 0);
                   }, 0)} minutes
               </h3>
               <p className="mb-4">
@@ -207,13 +207,13 @@ const Index = () => {
                   .map(([lessonId, _]) => {
                     const lesson = data.lessons.find(l => l.lessonId === lessonId);
                     return (
-                  <li key={lesson.lessonId}>
-                    <strong>{lesson.title}</strong>
+                  <li key={lesson?.lessonId}>
+                    <strong>{lesson?.title}</strong>
                     <ul className="list-none pl-5 space-y-1">
-                      <li>Difficulty: {lesson.difficultyLevel}</li>
-                      <li>Video Length: {lesson.videoLength}</li>
-                      <li>Time Consumption: {lesson.timeConsumption}</li>
-                      <li>Topics: {lesson.topics.map(topicIndex => data.topics[topicIndex]).join(', ')}</li>
+                      <li>Difficulty: {lesson?.difficultyLevel}</li>
+                      <li>Video Length: {lesson?.videoLength}</li>
+                      <li>Time Consumption: {lesson?.timeConsumption}</li>
+                      <li>Topics: {lesson?.topics?.map(topicIndex => data.topics[topicIndex]).join(', ')}</li>
                     </ul>
                   </li>
                     );
