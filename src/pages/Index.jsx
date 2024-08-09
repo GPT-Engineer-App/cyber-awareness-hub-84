@@ -91,6 +91,9 @@ const Index = () => {
     queryFn: fetchLessons,
   });
 
+  const topics = data?.topics || [];
+  const languages = data?.languages || [];
+
   const handleLessonSelect = (lesson, isChecked) => {
     setSelectedLessons((prev) => {
       if (isChecked) {
@@ -112,12 +115,12 @@ const Index = () => {
   };
 
   const filteredAndSortedLessons = useMemo(() => {
-    if (!data) return [];
+    if (!data || !data.lessons) return [];
     
     let result = data.lessons.filter(lesson =>
       lesson.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lesson.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      data.topics.some((topic, index) => lesson.topics.includes(index) && topic.toLowerCase().includes(searchTerm.toLowerCase()))
+      topics.some((topic, index) => lesson.topics.includes(index) && topic.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
     if (sortTopic && sortTopic !== 'all') {
@@ -129,7 +132,7 @@ const Index = () => {
     }
 
     return result;
-  }, [data, searchTerm, sortTopic, sortLanguage]);
+  }, [data, searchTerm, sortTopic, sortLanguage, topics]);
 
   if (isLoading) return <div className="text-center mt-8">{t.loading}</div>;
   if (error) return <div className="text-center mt-8 text-red-500">{t.error} {error.message}</div>;
@@ -168,7 +171,7 @@ const Index = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{t.allTopics}</SelectItem>
-              {data.topics.map((topic, index) => (
+              {topics.map((topic, index) => (
                 <SelectItem key={index} value={index.toString()}>{topic}</SelectItem>
               ))}
             </SelectContent>
@@ -179,7 +182,7 @@ const Index = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{t.allLanguages}</SelectItem>
-              {data.languages.map((language, index) => (
+              {languages.map((language, index) => (
                 <SelectItem key={index} value={index.toString()}>{language}</SelectItem>
               ))}
             </SelectContent>
