@@ -24,7 +24,7 @@ const CourseBuilder = ({ selectedLessons }) => {
 
     const description = `
 Enhance your cybersecurity skills with this tailored course of ${selectedLessons.length} lessons covering ${topics.length} critical areas in cyber and data security awareness.
-Total duration: ${totalDuration} minutes | Difficulty level: ${averageDifficulty}
+Total duration: ${totalDuration} minutes | Difficulty level: ${averageDifficulty || 'Not specified'}
 
 Key Topics:
 ${topics.map(topic => `• ${topic}: Master essential concepts and best practices.`).join('\n')}
@@ -34,7 +34,7 @@ Course Highlights:
   ? `From ${selectedLessons[0].title} to ${selectedLessons[selectedLessons.length - 1].title}` 
   : `Focusing on ${selectedLessons[0].title}`}
 • Practical Approach: Real-world scenarios and hands-on exercises
-• Flexible Learning: Adapted for ${averageDifficulty.toLowerCase()}-level learners
+• Flexible Learning: Adapted for ${averageDifficulty ? averageDifficulty.toLowerCase() : 'various'}-level learners
 • Interactive Content: Engaging quizzes to reinforce your knowledge
 
 By completing this course, you'll be equipped to:
@@ -49,9 +49,10 @@ Perfect for those looking to ${averageDifficulty === 'Basic' ? 'start their jour
   };
 
   const calculateAverageDifficulty = (lessons) => {
+    if (lessons.length === 0) return null;
     const difficultyLevels = ['Basic', 'Intermediate', 'Advanced'];
     const averageIndex = Math.round(lessons.reduce((sum, lesson) => sum + difficultyLevels.indexOf(lesson.difficultyLevel), 0) / lessons.length);
-    return difficultyLevels[averageIndex];
+    return difficultyLevels[averageIndex] || 'Not specified';
   };
 
   return (
