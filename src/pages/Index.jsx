@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -52,7 +52,7 @@ const Index = () => {
     let result = data.lessons.filter(lesson =>
       lesson.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lesson.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      data.topics.some((topic, index) => lesson.topics.includes(index) && topic.toLowerCase().includes(searchTerm.toLowerCase()))
+      lesson.topics.some(topicIndex => data.topics[topicIndex].toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
     if (sortTopic && sortTopic !== 'all') {
@@ -81,7 +81,7 @@ const Index = () => {
           Cyber and Data Security Awareness
         </h1>
         
-        <div className="mb-6 flex space-x-4 items-center">
+        <div className="mb-6 flex flex-wrap gap-4 items-center">
           <Button onClick={() => setShowCourseCreator(!showCourseCreator)}>
             {showCourseCreator ? 'Hide Course Creator' : 'Create Custom Course'}
           </Button>
@@ -150,14 +150,9 @@ const Index = () => {
               <CardContent className="flex-grow">
                 <img src={lesson.thumbImage} alt={lesson.title} className="w-full h-32 object-cover mb-4 rounded" />
                 <div className="flex flex-wrap gap-2 mb-2">
-                  {Array.isArray(lesson.topics) 
-                    ? lesson.topics.map((topicIndex) => (
-                        <Badge key={topicIndex} variant="secondary">{data.topics[topicIndex]}</Badge>
-                      ))
-                    : Object.keys(lesson.topics).map((topic) => (
-                        <Badge key={topic} variant="secondary">{topic}</Badge>
-                      ))
-                  }
+                  {lesson.topics.map((topicIndex) => (
+                    <Badge key={topicIndex} variant="secondary">{data.topics[topicIndex]}</Badge>
+                  ))}
                 </div>
                 <div className="text-sm text-gray-600 mb-2">
                   <Clock className="inline-block mr-1 h-4 w-4" />
