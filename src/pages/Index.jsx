@@ -220,7 +220,16 @@ const Index = () => {
                 <CardDescription>{lesson.description}</CardDescription>
               </CardHeader>
               <CardContent className="flex-grow">
-                <img src={lesson.thumbImage} alt={lesson.title} className="w-full h-32 object-cover mb-4 rounded" />
+                <iframe
+                  src={`https://player.vimeo.com/video/${lesson.videoUrl}`}
+                  width="100%"
+                  height="200"
+                  frameBorder="0"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowFullScreen
+                  title={lesson.title}
+                  className="mb-4 rounded"
+                ></iframe>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {Array.isArray(lesson.topics) 
                     ? lesson.topics.map((topicIndex) => (
