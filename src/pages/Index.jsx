@@ -25,7 +25,7 @@ const fetchLessons = async () => {
 
 const translations = {
   en: {
-    title: "Cyber and Data Security Awareness",
+    title: "Mindzeed lessons",
     createCustomCourse: "Create Custom Course",
     hideCourseCreator: "Hide Course Creator",
     buildCourse: "Build Course",
@@ -48,7 +48,7 @@ const translations = {
     error: "Error:",
   },
   da: {
-    title: "Cyber- og Datasikkerhedsbevidsthed",
+    title: "Mindzeed lektioner",
     createCustomCourse: "Opret tilpasset kursus",
     hideCourseCreator: "Skjul kursusopretteren",
     buildCourse: "Byg kursus",
