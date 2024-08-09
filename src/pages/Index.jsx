@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Shield, Search, ChevronLeft, ChevronRight, Clock, Video, BarChart2, HelpCircle, Check } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import CourseCreator from './CourseCreator';
 import CourseBuilder from './CourseBuilder';
@@ -34,13 +35,12 @@ const Index = () => {
     queryFn: fetchLessons,
   });
 
-  const handleLessonSelect = (lesson) => {
+  const handleLessonSelect = (lesson, isChecked) => {
     setSelectedLessons((prev) => {
-      const isAlreadySelected = prev.some((l) => l.lessonId === lesson.lessonId);
-      if (isAlreadySelected) {
-        return prev.filter((l) => l.lessonId !== lesson.lessonId);
-      } else {
+      if (isChecked) {
         return [...prev, lesson];
+      } else {
+        return prev.filter((l) => l.lessonId !== lesson.lessonId);
       }
     });
     setShowCourseBuilder(true);
@@ -131,18 +131,18 @@ const Index = () => {
               key={lesson.lessonId} 
               className={cn(
                 "relative",
-                "flex flex-col cursor-pointer transition-all duration-200",
+                "flex flex-col transition-all duration-200",
                 selectedLessons.some(l => l.lessonId === lesson.lessonId) 
                   ? "bg-blue-100 border-2 border-blue-500 shadow-md" 
                   : "hover:bg-gray-50 border border-transparent"
               )}
-              onClick={() => handleLessonSelect(lesson)}
             >
-              {selectedLessons.some(l => l.lessonId === lesson.lessonId) && (
-                <div className="absolute top-2 right-2 bg-blue-500 text-white rounded-full p-1">
-                  <Check className="h-4 w-4" />
-                </div>
-              )}
+              <div className="absolute top-2 right-2">
+                <Checkbox
+                  checked={selectedLessons.some(l => l.lessonId === lesson.lessonId)}
+                  onCheckedChange={(checked) => handleLessonSelect(lesson, checked)}
+                />
+              </div>
               <CardHeader>
                 <CardTitle>{lesson.title}</CardTitle>
                 <CardDescription>{lesson.description}</CardDescription>
