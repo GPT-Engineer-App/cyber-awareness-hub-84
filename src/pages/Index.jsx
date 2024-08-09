@@ -189,7 +189,7 @@ const Index = () => {
           ))}
         </div>
 
-      <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center">
           <Button
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
