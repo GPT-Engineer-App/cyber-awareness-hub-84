@@ -86,10 +86,6 @@ const Index = () => {
     setShowCourseCreator(false);
   };
 
-  if (!lessonsData) return <div className="text-center mt-8">{t.loading}</div>;
-
-  const { lessons, topics, languages } = lessonsData;
-
   const handleLessonSelect = (lesson, isChecked) => {
     setSelectedLessons((prev) => {
       if (isChecked) {
@@ -106,9 +102,9 @@ const Index = () => {
     setShowCourseBuilder(false);
   };
 
-  const isLessonSelected = (lesson) => {
+  const isLessonSelected = useCallback((lesson) => {
     return selectedLessons.some(l => l.lessonId === lesson.lessonId && l.title === lesson.title);
-  };
+  }, [selectedLessons]);
 
   const filteredAndSortedLessons = useMemo(() => {
     if (!lessonsData || !lessonsData.lessons) return [];
@@ -116,7 +112,9 @@ const Index = () => {
     let result = lessonsData.lessons.filter(lesson =>
       lesson.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lesson.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      topics.some((topic, index) => lesson.topics.includes(index) && topic.toLowerCase().includes(searchTerm.toLowerCase()))
+      (lessonsData.topics && lessonsData.topics.some((topic, index) => 
+        lesson.topics.includes(index) && topic.toLowerCase().includes(searchTerm.toLowerCase())
+      ))
     );
 
     if (sortTopic && sortTopic !== 'all') {
@@ -128,9 +126,11 @@ const Index = () => {
     }
 
     return result;
-  }, [lessonsData, searchTerm, sortTopic, sortLanguage, topics]);
+  }, [lessonsData, searchTerm, sortTopic, sortLanguage]);
 
   if (!lessonsData) return <div className="text-center mt-8">{t.loading}</div>;
+
+  const { topics, languages } = lessonsData;
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
