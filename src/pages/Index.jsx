@@ -1,27 +1,15 @@
-import { useState, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Shield, Search, ChevronLeft, ChevronRight, Clock, Video, BarChart2, HelpCircle, Check } from "lucide-react";
+import { Shield, Search, Clock, Video, BarChart2, HelpCircle } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { cn } from "@/lib/utils";
 import CourseCreator from './CourseCreator';
 import CourseBuilder from './CourseBuilder';
 import LanguageSelector from '../components/LanguageSelector';
 import { useLanguage } from '../LanguageContext';
-
-const ITEMS_PER_PAGE = 6;
-
-const fetchLessons = async () => {
-  const response = await fetch('/lessons.json');
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return response.json();
-};
 
 const translations = {
   en: {

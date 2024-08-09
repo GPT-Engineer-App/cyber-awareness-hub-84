@@ -31,11 +31,11 @@ const AdminDashboard = () => {
       );
       toast.success("Lesson updated successfully");
     } else {
-      updatedLessons = [...lessons, lesson];
+      const newLessonId = `SEC${String(lessons.length + 1).padStart(3, '0')}`;
+      updatedLessons = [...lessons, { ...lesson, lessonId: newLessonId }];
       toast.success("Lesson added successfully");
     }
     setLessons(updatedLessons);
-    localStorage.setItem("lessons", JSON.stringify(updatedLessons));
     setIsDialogOpen(false);
     setEditingLesson(null);
   };
@@ -48,7 +48,6 @@ const AdminDashboard = () => {
   const handleDelete = (lessonId) => {
     const updatedLessons = lessons.filter((lesson) => lesson.lessonId !== lessonId);
     setLessons(updatedLessons);
-    localStorage.setItem("lessons", JSON.stringify(updatedLessons));
     toast.success("Lesson deleted successfully");
   };
 

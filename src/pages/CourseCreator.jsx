@@ -1,9 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const CourseCreator = ({ lessons, topics, onCustomCourseCreation }) => {
   const [prompt, setPrompt] = useState('');
@@ -33,8 +31,6 @@ const CourseCreator = ({ lessons, topics, onCustomCourseCreation }) => {
     }
     onCustomCourseCreation(selected);
   };
-
-  // Remove this useMemo block as it's not needed in CourseCreator
 
   return (
     <Card className="mb-6">
