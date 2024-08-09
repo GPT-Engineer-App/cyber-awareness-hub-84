@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -32,11 +32,6 @@ const Index = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['lessons'],
     queryFn: fetchLessons,
-    onError: (error) => {
-      console.error("Failed to fetch lessons:", error);
-      // You could also use a toast notification here
-      // toast.error("Failed to load lessons. Please try again later.");
-    }
   });
 
   const handleLessonSelect = (lesson) => {
@@ -51,15 +46,13 @@ const Index = () => {
     setShowCourseBuilder(true);
   };
 
-  const isLessonSelected = (lessonId) => selectedLessons.some((l) => l.lessonId === lessonId);
-
   const filteredAndSortedLessons = useMemo(() => {
     if (!data) return [];
     
     let result = data.lessons.filter(lesson =>
       lesson.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lesson.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lesson.topics.some(topicIndex => data.topics[topicIndex].toLowerCase().includes(searchTerm.toLowerCase()))
+      data.topics.some((topic, index) => lesson.topics.includes(index) && topic.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
     if (sortTopic && sortTopic !== 'all') {
@@ -88,7 +81,7 @@ const Index = () => {
           Cyber and Data Security Awareness
         </h1>
         
-        <div className="mb-6 flex flex-wrap gap-4 items-center">
+        <div className="mb-6 flex space-x-4 items-center">
           <Button onClick={() => setShowCourseCreator(!showCourseCreator)}>
             {showCourseCreator ? 'Hide Course Creator' : 'Create Custom Course'}
           </Button>
@@ -133,25 +126,23 @@ const Index = () => {
         {showCourseBuilder && <CourseBuilder selectedLessons={selectedLessons} />}
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
-          {paginatedLessons.map((lesson) => {
-            const selected = isLessonSelected(lesson.lessonId);
-            return (
-              <Card 
-                key={lesson.lessonId} 
-                className={cn(
-                  "relative",
-                  "flex flex-col cursor-pointer transition-all duration-200",
-                  selected
-                    ? "bg-blue-100 border-2 border-blue-500 shadow-md" 
-                    : "hover:bg-gray-50 border border-transparent"
-                )}
-                onClick={() => handleLessonSelect(lesson)}
-              >
-                {selected && (
-                  <div className="absolute top-2 right-2 bg-blue-500 text-white rounded-full p-1">
-                    <Check className="h-4 w-4" />
-                  </div>
-                )}
+          {paginatedLessons.map(lesson => (
+            <Card 
+              key={lesson.lessonId} 
+              className={cn(
+                "relative",
+                "flex flex-col cursor-pointer transition-all duration-200",
+                selectedLessons.some(l => l.lessonId === lesson.lessonId) 
+                  ? "bg-blue-100 border-2 border-blue-500 shadow-md" 
+                  : "hover:bg-gray-50 border border-transparent"
+              )}
+              onClick={() => handleLessonSelect(lesson)}
+            >
+              {selectedLessons.some(l => l.lessonId === lesson.lessonId) && (
+                <div className="absolute top-2 right-2 bg-blue-500 text-white rounded-full p-1">
+                  <Check className="h-4 w-4" />
+                </div>
+              )}
               <CardHeader>
                 <CardTitle>{lesson.title}</CardTitle>
                 <CardDescription>{lesson.description}</CardDescription>
@@ -159,9 +150,14 @@ const Index = () => {
               <CardContent className="flex-grow">
                 <img src={lesson.thumbImage} alt={lesson.title} className="w-full h-32 object-cover mb-4 rounded" />
                 <div className="flex flex-wrap gap-2 mb-2">
-                  {lesson.topics.map((topicIndex) => (
-                    <Badge key={topicIndex} variant="secondary">{data.topics[topicIndex]}</Badge>
-                  ))}
+                  {Array.isArray(lesson.topics) 
+                    ? lesson.topics.map((topicIndex) => (
+                        <Badge key={topicIndex} variant="secondary">{data.topics[topicIndex]}</Badge>
+                      ))
+                    : Object.keys(lesson.topics).map((topic) => (
+                        <Badge key={topic} variant="secondary">{topic}</Badge>
+                      ))
+                  }
                 </div>
                 <div className="text-sm text-gray-600 mb-2">
                   <Clock className="inline-block mr-1 h-4 w-4" />

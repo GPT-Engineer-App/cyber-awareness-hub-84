@@ -23,36 +23,26 @@ const CourseBuilder = ({ selectedLessons }) => {
     const topics = [...new Set(selectedLessons.flatMap(lesson => lesson.topics))];
 
     const description = `
-Enhance your cybersecurity skills with this tailored course of ${selectedLessons.length} lessons covering ${topics.length} critical areas in cyber and data security awareness.
-Total duration: ${totalDuration} minutes | Difficulty level: ${averageDifficulty || 'Not specified'}
+This course consists of ${selectedLessons.length} lessons covering ${topics.length} main topics in the field of cyber and data security awareness. 
+The total duration of the course is approximately ${totalDuration} minutes, with an average difficulty level of ${averageDifficulty}. 
 
-Key Topics:
-${topics.map(topic => `• ${topic}: Master essential concepts and best practices.`).join('\n')}
+The course covers the following key areas:
+${topics.map(topic => `- ${topic}`).join('\n')}
 
-Course Highlights:
-• Comprehensive Coverage: ${selectedLessons.length > 1 
-  ? `From ${selectedLessons[0].title} to ${selectedLessons[selectedLessons.length - 1].title}` 
-  : `Focusing on ${selectedLessons[0].title}`}
-• Practical Approach: Real-world scenarios and hands-on exercises
-• Flexible Learning: Adapted for ${averageDifficulty ? averageDifficulty.toLowerCase() : 'various'}-level learners
-• Interactive Content: Engaging quizzes to reinforce your knowledge
-
-By completing this course, you'll be equipped to:
-1. Identify and mitigate common cybersecurity threats
-2. Implement robust data protection strategies
-3. Contribute to your organization's overall security posture
-
-Perfect for those looking to ${averageDifficulty === 'Basic' ? 'start their journey in' : averageDifficulty === 'Intermediate' ? 'expand their knowledge of' : 'master'} cyber security. Begin your path to becoming a cybersecurity-savvy professional today!
+By completing this course, you will gain a comprehensive understanding of various aspects of cyber security, 
+${selectedLessons.length > 1 
+  ? `from ${selectedLessons[0].title.toLowerCase()} to ${selectedLessons[selectedLessons.length - 1].title.toLowerCase()}.` 
+  : `focusing on ${selectedLessons[0].title.toLowerCase()}.`}
+This course is suitable for individuals looking to ${averageDifficulty === 'Basic' ? 'start their journey in' : averageDifficulty === 'Intermediate' ? 'expand their knowledge of' : 'master'} cyber security awareness.
     `;
 
     setCourseDescription(description.trim());
   };
 
   const calculateAverageDifficulty = (lessons) => {
-    if (lessons.length === 0) return null;
     const difficultyLevels = ['Basic', 'Intermediate', 'Advanced'];
     const averageIndex = Math.round(lessons.reduce((sum, lesson) => sum + difficultyLevels.indexOf(lesson.difficultyLevel), 0) / lessons.length);
-    return difficultyLevels[averageIndex] || 'Not specified';
+    return difficultyLevels[averageIndex];
   };
 
   return (
