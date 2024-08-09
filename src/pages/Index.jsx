@@ -10,6 +10,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import CourseCreator from './CourseCreator';
 import CourseBuilder from './CourseBuilder';
+import LanguageSelector from '../components/LanguageSelector';
+import { useLanguage } from '../LanguageContext';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -21,7 +23,59 @@ const fetchLessons = async () => {
   return response.json();
 };
 
+const translations = {
+  en: {
+    title: "Cyber and Data Security Awareness",
+    createCustomCourse: "Create Custom Course",
+    hideCourseCreator: "Hide Course Creator",
+    buildCourse: "Build Course",
+    hideCourseBuilder: "Hide Course Builder",
+    searchLessons: "Search lessons...",
+    sortByTopic: "Sort by Topic",
+    sortByLanguage: "Sort by Language",
+    allTopics: "All Topics",
+    allLanguages: "All Languages",
+    time: "Time",
+    video: "Video",
+    difficulty: "Difficulty",
+    quizQuestions: "Number of quiz questions",
+    availableIn: "Available in",
+    previous: "Previous",
+    next: "Next",
+    page: "Page",
+    of: "of",
+    loading: "Loading...",
+    error: "Error:",
+  },
+  da: {
+    title: "Cyber- og Datasikkerhedsbevidsthed",
+    createCustomCourse: "Opret tilpasset kursus",
+    hideCourseCreator: "Skjul kursusopretteren",
+    buildCourse: "Byg kursus",
+    hideCourseBuilder: "Skjul kursusbyggeren",
+    searchLessons: "Søg lektioner...",
+    sortByTopic: "Sortér efter emne",
+    sortByLanguage: "Sortér efter sprog",
+    allTopics: "Alle emner",
+    allLanguages: "Alle sprog",
+    time: "Tid",
+    video: "Video",
+    difficulty: "Sværhedsgrad",
+    quizQuestions: "Antal quizspørgsmål",
+    availableIn: "Tilgængelig på",
+    previous: "Forrige",
+    next: "Næste",
+    page: "Side",
+    of: "af",
+    loading: "Indlæser...",
+    error: "Fejl:",
+  },
+};
+
 const Index = () => {
+  const { language } = useLanguage();
+  const t = translations[language];
+
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [sortTopic, setSortTopic] = useState('');
@@ -33,7 +87,7 @@ const Index = () => {
   const handleCustomCourseCreation = (lessons) => {
     setSelectedLessons(lessons);
     setShowCourseBuilder(true);
-    setShowCourseCreator(false);  // Hide CourseCreator after generating a course
+    setShowCourseCreator(false);
   };
 
   const { data, isLoading, error } = useQuery({
@@ -85,28 +139,31 @@ const Index = () => {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedLessons = filteredAndSortedLessons.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-  if (isLoading) return <div className="text-center mt-8">Loading...</div>;
-  if (error) return <div className="text-center mt-8 text-red-500">Error: {error.message}</div>;
+  if (isLoading) return <div className="text-center mt-8">{t.loading}</div>;
+  if (error) return <div className="text-center mt-8 text-red-500">{t.error} {error.message}</div>;
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8 text-center text-blue-600">
-          <Shield className="inline-block mr-2 h-10 w-10" />
-          Cyber and Data Security Awareness
-        </h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold text-blue-600">
+            <Shield className="inline-block mr-2 h-10 w-10" />
+            {t.title}
+          </h1>
+          <LanguageSelector />
+        </div>
         
         <div className="mb-6 flex space-x-4 items-center">
           <Button onClick={() => setShowCourseCreator(!showCourseCreator)}>
-            {showCourseCreator ? 'Hide Course Creator' : 'Create Custom Course'}
+            {showCourseCreator ? t.hideCourseCreator : t.createCustomCourse}
           </Button>
           <Button onClick={() => setShowCourseBuilder(!showCourseBuilder)}>
-            {showCourseBuilder ? 'Hide Course Builder' : 'Build Course'}
+            {showCourseBuilder ? t.hideCourseBuilder : t.buildCourse}
           </Button>
           <div className="relative flex-grow">
             <Input
               type="text"
-              placeholder="Search lessons..."
+              placeholder={t.searchLessons}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -115,10 +172,10 @@ const Index = () => {
           </div>
           <Select value={sortTopic} onValueChange={setSortTopic}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Sort by Topic" />
+              <SelectValue placeholder={t.sortByTopic} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Topics</SelectItem>
+              <SelectItem value="all">{t.allTopics}</SelectItem>
               {data.topics.map((topic, index) => (
                 <SelectItem key={index} value={index.toString()}>{topic}</SelectItem>
               ))}
@@ -126,10 +183,10 @@ const Index = () => {
           </Select>
           <Select value={sortLanguage} onValueChange={setSortLanguage}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Sort by Language" />
+              <SelectValue placeholder={t.sortByLanguage} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Languages</SelectItem>
+              <SelectItem value="all">{t.allLanguages}</SelectItem>
               {data.languages.map((language, index) => (
                 <SelectItem key={index} value={index.toString()}>{language}</SelectItem>
               ))}
@@ -181,24 +238,24 @@ const Index = () => {
                 </div>
                 <div className="text-sm text-gray-600 mb-2">
                   <Clock className="inline-block mr-1 h-4 w-4" />
-                  Time: {lesson.timeConsumption}
+                  {t.time}: {lesson.timeConsumption}
                 </div>
                 <div className="text-sm text-gray-600 mb-2">
                   <Video className="inline-block mr-1 h-4 w-4" />
-                  Video: {lesson.videoLength}
+                  {t.video}: {lesson.videoLength}
                 </div>
                 <div className="text-sm text-gray-600 mb-2">
                   <BarChart2 className="inline-block mr-1 h-4 w-4" />
-                  Difficulty: {lesson.difficultyLevel}
+                  {t.difficulty}: {lesson.difficultyLevel}
                 </div>
                 <div className="text-sm text-gray-600">
                   <HelpCircle className="inline-block mr-1 h-4 w-4" />
-                  Number of quiz questions: {lesson.quizQuestions}
+                  {t.quizQuestions}: {lesson.quizQuestions}
                 </div>
               </CardContent>
               <CardFooter>
                 <div className="text-sm text-gray-600">
-                  Available in: {lesson.availableLanguages.map(langIndex => data.languages[langIndex]).join(", ")}
+                  {t.availableIn}: {lesson.availableLanguages.map(langIndex => data.languages[langIndex]).join(", ")}
                 </div>
               </CardFooter>
             </Card>
@@ -210,14 +267,14 @@ const Index = () => {
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
           >
-            <ChevronLeft className="mr-2 h-4 w-4" /> Previous
+            <ChevronLeft className="mr-2 h-4 w-4" /> {t.previous}
           </Button>
-          <span>Page {currentPage} of {totalPages}</span>
+          <span>{t.page} {currentPage} {t.of} {totalPages}</span>
           <Button
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
           >
-            Next <ChevronRight className="ml-2 h-4 w-4" />
+            {t.next} <ChevronRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
       </div>
