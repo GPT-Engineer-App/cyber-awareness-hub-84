@@ -133,23 +133,25 @@ const Index = () => {
         {showCourseBuilder && <CourseBuilder selectedLessons={selectedLessons} />}
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
-          {paginatedLessons.map(lesson => (
-            <Card 
-              key={lesson.lessonId} 
-              className={cn(
-                "relative",
-                "flex flex-col cursor-pointer transition-all duration-200",
-                isLessonSelected(lesson.lessonId)
-                  ? "bg-blue-100 border-2 border-blue-500 shadow-md" 
-                  : "hover:bg-gray-50 border border-transparent"
-              )}
-              onClick={() => handleLessonSelect(lesson)}
-            >
-              {isLessonSelected(lesson.lessonId) && (
-                <div className="absolute top-2 right-2 bg-blue-500 text-white rounded-full p-1">
-                  <Check className="h-4 w-4" />
-                </div>
-              )}
+          {paginatedLessons.map(lesson => {
+            const selected = isLessonSelected(lesson.lessonId);
+            return (
+              <Card 
+                key={lesson.lessonId} 
+                className={cn(
+                  "relative",
+                  "flex flex-col cursor-pointer transition-all duration-200",
+                  selected
+                    ? "bg-blue-100 border-2 border-blue-500 shadow-md" 
+                    : "hover:bg-gray-50 border border-transparent"
+                )}
+                onClick={() => handleLessonSelect(lesson)}
+              >
+                {selected && (
+                  <div className="absolute top-2 right-2 bg-blue-500 text-white rounded-full p-1">
+                    <Check className="h-4 w-4" />
+                  </div>
+                )}
               <CardHeader>
                 <CardTitle>{lesson.title}</CardTitle>
                 <CardDescription>{lesson.description}</CardDescription>
