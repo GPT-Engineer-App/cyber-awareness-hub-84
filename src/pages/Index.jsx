@@ -133,13 +133,7 @@ const Index = () => {
           {paginatedLessons.map(lesson => (
             <Card 
               key={lesson.lessonId} 
-              className={cn(
-                "relative",
-                "flex flex-col transition-all duration-200",
-                selectedLessons.some(l => l.lessonId === lesson.lessonId) 
-                  ? "bg-blue-100 border-2 border-blue-500 shadow-md" 
-                  : "hover:bg-gray-50 border border-transparent"
-              )}
+              className="relative flex flex-col transition-all duration-200 hover:bg-gray-50 border border-transparent"
             >
               <div className="absolute top-2 right-2">
                 <Checkbox
