@@ -220,24 +220,16 @@ const Index = () => {
                 <CardDescription>{lesson.description}</CardDescription>
               </CardHeader>
               <CardContent className="flex-grow">
-                <div className="relative" style={{ paddingBottom: '56.25%', height: 0 }}>
-                  <iframe
-                    id={`vimeo-${lesson.lessonId}`}
-                    src={`https://player.vimeo.com/video/${lesson.videoUrl}?background=1&autoplay=0&loop=0&byline=0&title=0&portrait=0`}
-                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-                    frameBorder="0"
-                    allow="autoplay; fullscreen; picture-in-picture"
-                    allowFullScreen
-                    title={lesson.title}
-                    className="mb-4 rounded"
-                  ></iframe>
-                  <button
-                    onClick={() => document.getElementById(`vimeo-${lesson.lessonId}`).src += '&autoplay=1'}
-                    className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-2xl"
-                  >
-                    ▶
-                  </button>
-                </div>
+                <iframe
+                  src={`https://player.vimeo.com/video/${lesson.videoUrl}`}
+                  width="100%"
+                  height="200"
+                  frameBorder="0"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowFullScreen
+                  title={lesson.title}
+                  className="mb-4 rounded"
+                ></iframe>
                 <div className="flex flex-wrap gap-2 mb-2">
                   {Array.isArray(lesson.topics) 
                     ? lesson.topics.map((topicIndex) => (
