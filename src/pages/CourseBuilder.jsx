@@ -30,7 +30,9 @@ The course covers the following key areas:
 ${topics.map(topic => `- ${topic}`).join('\n')}
 
 By completing this course, you will gain a comprehensive understanding of various aspects of cyber security, 
-from ${selectedLessons[0].title.toLowerCase()} to ${selectedLessons[selectedLessons.length - 1].title.toLowerCase()}. 
+${selectedLessons.length > 1 
+  ? `from ${selectedLessons[0].title.toLowerCase()} to ${selectedLessons[selectedLessons.length - 1].title.toLowerCase()}.` 
+  : `focusing on ${selectedLessons[0].title.toLowerCase()}.`}
 This course is suitable for individuals looking to ${averageDifficulty === 'Basic' ? 'start their journey in' : averageDifficulty === 'Intermediate' ? 'expand their knowledge of' : 'master'} cyber security awareness.
     `;
 

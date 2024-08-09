@@ -142,9 +142,14 @@ const Index = () => {
               <CardContent className="flex-grow">
                 <img src={lesson.thumbImage} alt={lesson.title} className="w-full h-32 object-cover mb-4 rounded" />
                 <div className="flex flex-wrap gap-2 mb-2">
-                  {lesson.topics.map((topicIndex) => (
-                    <Badge key={topicIndex} variant="secondary">{data.topics[topicIndex]}</Badge>
-                  ))}
+                  {Array.isArray(lesson.topics) 
+                    ? lesson.topics.map((topicIndex) => (
+                        <Badge key={topicIndex} variant="secondary">{data.topics[topicIndex]}</Badge>
+                      ))
+                    : Object.keys(lesson.topics).map((topic) => (
+                        <Badge key={topic} variant="secondary">{topic}</Badge>
+                      ))
+                  }
                 </div>
                 <div className="text-sm text-gray-600 mb-2">
                   <Clock className="inline-block mr-1 h-4 w-4" />
