@@ -20,7 +20,9 @@ const CourseBuilder = ({ selectedLessons }) => {
 
     const totalDuration = selectedLessons.reduce((sum, lesson) => sum + parseInt(lesson.timeConsumption), 0);
     const averageDifficulty = calculateAverageDifficulty(selectedLessons);
-    const topics = [...new Set(selectedLessons.flatMap(lesson => lesson.topics))];
+    const topics = [...new Set(selectedLessons.flatMap(lesson => 
+      Array.isArray(lesson.topics) ? lesson.topics : Object.keys(lesson.topics)
+    ))];
 
     const description = `
 This course consists of ${selectedLessons.length} lessons covering ${topics.length} main topics in the field of cyber and data security awareness. 

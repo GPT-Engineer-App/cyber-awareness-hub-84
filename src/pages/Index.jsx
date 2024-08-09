@@ -46,6 +46,10 @@ const Index = () => {
     setShowCourseBuilder(true);
   };
 
+  const isLessonSelected = (lesson) => {
+    return selectedLessons.some(l => l.lessonId === lesson.lessonId && l.title === lesson.title);
+  };
+
   const filteredAndSortedLessons = useMemo(() => {
     if (!data) return [];
     
@@ -139,7 +143,7 @@ const Index = () => {
             >
               <div className="absolute top-2 right-2">
                 <Checkbox
-                  checked={selectedLessons.some(l => l.lessonId === lesson.lessonId)}
+                  checked={isLessonSelected(lesson)}
                   onCheckedChange={(checked) => handleLessonSelect(lesson, checked)}
                 />
               </div>
