@@ -5,14 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Shield, Search, Clock, Video, BarChart2, HelpCircle, Plus, Minus } from "lucide-react";
+import { Shield, Search, Clock, Video, BarChart2, HelpCircle, Plus, Minus, X } from "lucide-react";
 import { Drawer } from "@/components/ui/drawer";
 import LanguageSelector from '../components/LanguageSelector';
 import { useLanguage } from '../LanguageContext';
 import CourseSidebar from '../components/CourseSidebar';
-import { Drawer } from "@/components/ui/drawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, Minus, X } from "lucide-react";
 
 const translations = {
   en: {
