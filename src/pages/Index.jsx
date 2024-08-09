@@ -37,11 +37,11 @@ const Index = () => {
       data.topics.some((topic, index) => lesson.topics.includes(index) && topic.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
-    if (sortTopic) {
+    if (sortTopic && sortTopic !== 'all') {
       result = result.filter(lesson => lesson.topics.includes(parseInt(sortTopic)));
     }
 
-    if (sortLanguage) {
+    if (sortLanguage && sortLanguage !== 'all') {
       result = result.filter(lesson => lesson.availableLanguages.includes(parseInt(sortLanguage)));
     }
 
@@ -79,7 +79,7 @@ const Index = () => {
               <SelectValue placeholder="Sort by Topic" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Topics</SelectItem>
+              <SelectItem value="all">All Topics</SelectItem>
               {data.topics.map((topic, index) => (
                 <SelectItem key={index} value={index.toString()}>{topic}</SelectItem>
               ))}
@@ -90,7 +90,7 @@ const Index = () => {
               <SelectValue placeholder="Sort by Language" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Languages</SelectItem>
+              <SelectItem value="all">All Languages</SelectItem>
               {data.languages.map((language, index) => (
                 <SelectItem key={index} value={index.toString()}>{language}</SelectItem>
               ))}
