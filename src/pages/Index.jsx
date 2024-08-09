@@ -133,7 +133,7 @@ const Index = () => {
         {showCourseBuilder && <CourseBuilder selectedLessons={selectedLessons} />}
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
-          {paginatedLessons.map(lesson => {
+          {paginatedLessons.map((lesson) => {
             const selected = isLessonSelected(lesson.lessonId);
             return (
               <Card 
