@@ -48,6 +48,18 @@
       "timeConsumption": "30 minutes",
       "difficultyLevel": "Beginner",
       "quizQuestions": 10
+    },
+        {
+      "lessonId": "02",
+      "title": "Email Security",
+      "description": "Learn how to create and manage strong passwords.",
+      "availableLanguages": [0, 1, 2],
+      "topics": [0, 1, 2],
+      "videoUrl": "987172529",
+      "videoLength": "15:30",
+      "timeConsumption": "30 minutes",
+      "difficultyLevel": "Beginner",
+      "quizQuestions": 10
     }
   ]
 }
